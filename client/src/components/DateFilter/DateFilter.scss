@@ -1,0 +1,62 @@
+@use '../../styles/variables' as *;
+
+.date-filter-container {
+  display: flex;
+  align-items: center;
+  gap: to-vw(12);
+  flex-wrap: wrap;
+
+  .filter-pill-group {
+    display: flex;
+    align-items: center;
+    background-color: var(--bg-surface);
+    border: to-vh(1) solid var(--border-color);
+    border-radius: to-vw(10);
+    padding: to-vh(4) to-vw(4);
+    gap: to-vw(4);
+
+    .filter-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: to-vw(6);
+      padding: to-vh(6) to-vw(14);
+      border-radius: to-vw(7);
+      font-size: to-vw(13);
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: all 0.2s ease;
+
+      &:hover {
+        color: var(--text-primary);
+      }
+
+      &.active {
+        background-color: var(--accent-active-bg);
+        color: var(--accent-primary);
+        font-weight: 600;
+      }
+    }
+  }
+
+  .custom-dropdowns {
+    display: flex;
+    align-items: center;
+    gap: to-vw(8);
+
+    select {
+      height: to-vh(36);
+      padding: 0 to-vw(12);
+      border-radius: to-vw(8);
+      background-color: var(--bg-surface);
+      border: to-vh(1) solid var(--border-color);
+      font-size: to-vw(13);
+      font-weight: 500;
+      color: var(--text-primary);
+      outline: none;
+
+      &:focus {
+        border-color: var(--accent-primary);
+      }
+    }
+  }
+}

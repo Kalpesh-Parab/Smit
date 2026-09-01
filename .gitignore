@@ -1,0 +1,20 @@
+# Node dependencies
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Environment variables
+.env
+client/.env
+server/.env
+*.env.local
+
+# WhatsApp session data
+baileys_auth_info/
+server/baileys_auth_info/
+
+# Build outputs & caches
+client/dist/
+dist/
+.DS_Store
+*.log

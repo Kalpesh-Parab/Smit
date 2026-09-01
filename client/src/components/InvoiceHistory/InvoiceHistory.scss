@@ -1,0 +1,193 @@
+@use '../../styles/variables' as *;
+
+.invoice-history-card {
+  background-color: var(--bg-surface);
+  border: to-vh(1) solid var(--border-color);
+  border-radius: to-vw(12);
+  padding: to-vh(24) to-vw(28);
+
+  .history-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: to-vh(20);
+
+    .title-area {
+      display: flex;
+      align-items: center;
+      gap: to-vw(12);
+
+      h3 {
+        font-size: to-vw(18);
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+
+      .count-badge {
+        font-size: to-vw(12);
+        background-color: var(--bg-primary);
+        color: var(--text-secondary);
+        padding: to-vh(4) to-vw(8);
+        border-radius: to-vw(6);
+        border: to-vh(1) solid var(--border-color);
+      }
+    }
+
+    .search-box {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: to-vw(300);
+
+      .search-icon {
+        position: absolute;
+        left: to-vw(10);
+        color: var(--text-secondary);
+      }
+
+      input {
+        width: 100%;
+        height: to-vh(36);
+        padding-left: to-vw(32);
+        padding-right: to-vw(12);
+        background-color: var(--bg-primary);
+        border: to-vh(1) solid var(--border-color);
+        border-radius: to-vw(6);
+        font-size: to-vw(13);
+        color: var(--text-primary);
+        outline: none;
+
+        &:focus {
+          border-color: var(--accent-primary);
+        }
+      }
+    }
+  }
+
+  .loading-state,
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: to-vh(40) 0;
+    color: var(--text-secondary);
+    gap: to-vh(10);
+
+    .spinner {
+      animation: spin 1s linear infinite;
+      color: var(--accent-primary);
+    }
+  }
+
+  .table-responsive {
+    overflow-x: auto;
+    width: 100%;
+
+    .invoices-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: to-vw(13);
+
+      th {
+        padding: to-vh(12) to-vw(12);
+        border-bottom: to-vh(1) solid var(--border-color);
+        color: var(--text-secondary);
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: to-vw(11);
+        letter-spacing: 0.05em;
+
+        &.text-right {
+          text-align: right;
+        }
+      }
+
+      td {
+        padding: to-vh(14) to-vw(12);
+        border-bottom: to-vh(1) solid var(--border-color);
+        color: var(--text-primary);
+
+        .party-cell {
+          display: flex;
+          flex-direction: column;
+          span {
+            font-size: to-vw(11);
+            color: var(--text-secondary);
+          }
+        }
+
+        .details-cell {
+          display: flex;
+          flex-direction: column;
+          font-size: to-vw(12);
+          color: var(--text-secondary);
+        }
+
+        .status-pill {
+          display: inline-block;
+          font-size: to-vw(11);
+          font-weight: 600;
+          text-transform: uppercase;
+          padding: to-vh(3) to-vw(8);
+          border-radius: to-vw(4);
+
+          &.paid {
+            background-color: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+          }
+          &.partial {
+            background-color: rgba(245, 158, 11, 0.15);
+            color: #f59e0b;
+          }
+          &.unpaid {
+            background-color: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+          }
+        }
+
+        .action-buttons {
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+          gap: to-vw(6);
+
+          .action-btn {
+            padding: to-vh(6) to-vw(6);
+            border-radius: to-vw(6);
+            transition: all 0.15s ease;
+
+            &.wa {
+              color: #25d366;
+              &:hover {
+                background-color: rgba(37, 211, 102, 0.15);
+              }
+            }
+            &.edit {
+              color: var(--accent-primary);
+              &:hover {
+                background-color: var(--accent-active-bg);
+              }
+            }
+            &.delete {
+              color: #ef4444;
+              &:hover {
+                background-color: rgba(239, 68, 68, 0.15);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

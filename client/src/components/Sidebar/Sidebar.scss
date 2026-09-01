@@ -1,0 +1,59 @@
+@use '../../styles/variables' as *;
+
+.dashboard-sidebar {
+  width: var(--sidebar-width);
+  height: calc(100vh - var(--navbar-height));
+  background-color: var(--bg-sidebar);
+  border-right: to-vh(1) solid var(--border-color);
+  padding: to-vh(24) to-vw(16);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+
+  .sidebar-header {
+    margin-bottom: to-vh(16);
+    padding: 0 to-vw(12);
+
+    .service-category {
+      font-size: to-vw(12);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 700;
+      color: var(--text-secondary);
+    }
+  }
+
+  .sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: to-vh(6);
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: to-vw(12);
+      padding: to-vh(10) to-vw(14);
+      border-radius: to-vw(8);
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: to-vw(14);
+      font-weight: 500;
+      transition: all 0.15s ease;
+
+      .menu-icon {
+        flex-shrink: 0;
+      }
+
+      &:hover {
+        background-color: var(--bg-surface);
+        color: var(--text-primary);
+      }
+
+      &.active {
+        background-color: var(--accent-active-bg);
+        color: var(--accent-primary);
+        font-weight: 600;
+      }
+    }
+  }
+}

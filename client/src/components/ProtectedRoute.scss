@@ -1,0 +1,73 @@
+@use '../styles/variables' as *;
+
+.auth-lock-screen {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  gap: to-vh(16);
+
+  .spinner {
+    animation: spin 1s linear infinite;
+    color: var(--accent-primary);
+  }
+
+  .lock-card {
+    width: to-vw(420);
+    background-color: var(--bg-surface);
+    border: to-vh(1) solid var(--border-color);
+    border-radius: to-vw(16);
+    padding: to-vh(36) to-vw(32);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 to-vh(16) to-vw(36) rgba(0, 0, 0, 0.08);
+
+    .lock-icon {
+      width: to-vw(60);
+      height: to-vh(60);
+      border-radius: 50%;
+      background-color: var(--accent-active-bg);
+      color: var(--accent-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: to-vh(16);
+    }
+
+    h2 {
+      font-size: to-vw(20);
+      font-weight: 700;
+      margin-bottom: to-vh(8);
+    }
+
+    p {
+      font-size: to-vw(13);
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: to-vh(24);
+    }
+
+    .login-action-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: to-vw(10);
+      background-color: var(--accent-primary);
+      color: #ffffff;
+      padding: to-vh(12) to-vw(24);
+      border-radius: to-vw(8);
+      font-size: to-vw(14);
+      font-weight: 600;
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: var(--accent-hover);
+      }
+    }
+  }
+}

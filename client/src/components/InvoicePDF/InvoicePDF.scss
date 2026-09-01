@@ -1,0 +1,240 @@
+.pdf-print-wrapper {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+}
+
+.invoice-document {
+  width: 794px; /* A4 width standard in px */
+  min-height: 1123px; /* A4 height standard in px */
+  background: #ffffff;
+  color: #1f2937;
+  padding: 48px;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+  .doc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    .brand-title {
+      font-size: 26px;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.03em;
+      margin: 0;
+    }
+
+    .sub-tag {
+      font-size: 12px;
+      color: #64748b;
+      margin: 4px 0 2px;
+    }
+
+    .contact-info {
+      font-size: 11px;
+      color: #94a3b8;
+      margin: 0;
+    }
+
+    .invoice-badge {
+      text-align: right;
+
+      h2 {
+        font-size: 24px;
+        font-weight: 800;
+        letter-spacing: 0.05em;
+        color: #2563eb;
+        margin: 0;
+      }
+
+      .inv-no {
+        font-size: 13px;
+        font-family: monospace;
+        font-weight: 700;
+        color: #475569;
+      }
+    }
+  }
+
+  .divider {
+    border: none;
+    border-top: 2px solid #e2e8f0;
+    margin: 20px 0 24px;
+  }
+
+  .doc-meta-grid {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 28px;
+
+    .meta-block {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+
+      .label {
+        font-size: 10px;
+        font-weight: 700;
+        color: #94a3b8;
+        letter-spacing: 0.05em;
+      }
+
+      .party-name {
+        font-size: 16px;
+        color: #0f172a;
+      }
+
+      .phone {
+        font-size: 12px;
+        color: #64748b;
+      }
+
+      &.right {
+        text-align: right;
+        gap: 8px;
+
+        strong {
+          font-size: 13px;
+          margin-left: 6px;
+        }
+
+        .status-tag {
+          display: inline-block;
+          font-size: 10px;
+          font-weight: 700;
+          padding: 2px 8px;
+          border-radius: 4px;
+          margin-left: 6px;
+
+          &.paid {
+            background: #dcfce7;
+            color: #15803d;
+          }
+          &.partial {
+            background: #fef3c7;
+            color: #b45309;
+          }
+          &.unpaid {
+            background: #fee2e2;
+            color: #b91c1c;
+          }
+        }
+      }
+    }
+  }
+
+  .doc-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 28px;
+
+    th {
+      background-color: #f8fafc;
+      color: #475569;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 10px 14px;
+      border-bottom: 2px solid #cbd5e1;
+      text-align: left;
+
+      &.text-right {
+        text-align: right;
+      }
+    }
+
+    td {
+      padding: 12px 14px;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 13px;
+      color: #334155;
+
+      &.text-right {
+        text-align: right;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .doc-bottom-grid {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+
+    .notes-block {
+      width: 50%;
+
+      .label {
+        font-size: 10px;
+        font-weight: 700;
+        color: #94a3b8;
+      }
+
+      p {
+        font-size: 12px;
+        color: #64748b;
+        margin-top: 4px;
+      }
+    }
+
+    .totals-block {
+      width: 40%;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      .total-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 13px;
+        color: #64748b;
+
+        strong {
+          color: #0f172a;
+        }
+
+        &.grand {
+          border-top: 2px solid #0f172a;
+          padding-top: 8px;
+          font-size: 15px;
+
+          strong {
+            font-size: 16px;
+          }
+        }
+
+        .text-success {
+          color: #16a34a;
+        }
+        .text-danger {
+          color: #dc2626;
+        }
+      }
+    }
+  }
+
+  .doc-footer {
+    margin-top: 70px;
+    display: flex;
+    justify-content: flex-end;
+
+    .sig-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .sig-line {
+        width: 160px;
+        border-bottom: 1px solid #94a3b8;
+        margin-bottom: 6px;
+      }
+
+      span {
+        font-size: 11px;
+        color: #64748b;
+      }
+    }
+  }
+}

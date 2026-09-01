@@ -1,0 +1,198 @@
+@use '../../styles/variables' as *;
+
+.home-dashboard {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: to-vh(24);
+
+  .dashboard-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .title-area {
+      h2 {
+        font-size: to-vw(24);
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+      p {
+        font-size: to-vw(14);
+        color: var(--text-secondary);
+      }
+    }
+  }
+
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: to-vw(16);
+
+    .kpi-card {
+      background-color: var(--bg-surface);
+      border: to-vh(1) solid var(--border-color);
+      border-radius: to-vw(12);
+      padding: to-vh(18) to-vw(16);
+      display: flex;
+      align-items: center;
+      gap: to-vw(14);
+
+      .kpi-icon {
+        width: to-vw(42);
+        height: to-vh(42);
+        border-radius: to-vw(10);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      &.income .kpi-icon {
+        background-color: rgba(37, 99, 235, 0.12);
+        color: var(--accent-primary);
+      }
+      &.pending .kpi-icon {
+        background-color: rgba(245, 158, 11, 0.12);
+        color: #f59e0b;
+      }
+      &.fuel .kpi-icon {
+        background-color: rgba(249, 115, 22, 0.12);
+        color: #f97316;
+      }
+      &.expense .kpi-icon {
+        background-color: rgba(239, 68, 68, 0.12);
+        color: #ef4444;
+      }
+      &.profit .kpi-icon {
+        background-color: rgba(16, 185, 129, 0.12);
+        color: #10b981;
+      }
+
+      .kpi-details {
+        display: flex;
+        flex-direction: column;
+        span {
+          font-size: to-vw(11);
+          color: var(--text-secondary);
+          font-weight: 600;
+          text-transform: uppercase;
+        }
+        h3 {
+          font-size: to-vw(18);
+          font-weight: 700;
+          margin: to-vh(2) 0;
+
+          &.text-orange {
+            color: #f97316;
+          }
+          &.text-warning {
+            color: #f59e0b;
+          }
+          &.text-danger {
+            color: #ef4444;
+          }
+          &.text-success {
+            color: #10b981;
+          }
+        }
+        small {
+          font-size: to-vw(11);
+          color: var(--text-secondary);
+        }
+      }
+    }
+  }
+
+  .insights-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: to-vw(20);
+
+    .insight-card {
+      background-color: var(--bg-surface);
+      border: to-vh(1) solid var(--border-color);
+      border-radius: to-vw(12);
+      padding: to-vh(24) to-vw(24);
+
+      h3 {
+        font-size: to-vw(16);
+        font-weight: 700;
+        margin-bottom: to-vh(18);
+      }
+
+      .service-breakdown-list {
+        display: flex;
+        flex-direction: column;
+        gap: to-vh(14);
+
+        .service-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: to-vh(12) to-vw(14);
+          background-color: var(--bg-primary);
+          border-radius: to-vw(8);
+
+          .svc-meta {
+            display: flex;
+            align-items: center;
+            gap: to-vw(10);
+            font-size: to-vw(14);
+          }
+          .svc-stats {
+            display: flex;
+            gap: to-vw(14);
+            font-size: to-vw(13);
+            font-weight: 600;
+            .exp {
+              color: #ef4444;
+            }
+          }
+        }
+      }
+
+      .fleet-stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: to-vw(14);
+
+        .fleet-stat-box {
+          background-color: var(--bg-primary);
+          border-radius: to-vw(10);
+          padding: to-vh(20) to-vw(16);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          gap: to-vh(6);
+          color: var(--accent-primary);
+
+          h4 {
+            font-size: to-vw(22);
+            color: var(--text-primary);
+          }
+          p {
+            font-size: to-vw(12);
+            color: var(--text-secondary);
+            font-weight: 500;
+          }
+        }
+      }
+    }
+  }
+}
+
+.analytics-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: to-vh(400);
+  gap: to-vh(12);
+  color: var(--text-secondary);
+  .spinner {
+    animation: spin 1s linear infinite;
+    color: var(--accent-primary);
+  }
+}

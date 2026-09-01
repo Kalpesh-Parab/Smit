@@ -1,0 +1,39 @@
+// Base reference resolutions
+$design-width: 1920;
+$design-height: 912;
+
+// Functions to convert exact design pixels into vw and vh units
+@function to-vw($px) {
+  @return ($px / $design-width) * 100vw;
+}
+
+@function to-vh($px) {
+  @return ($px / $design-height) * 100vh;
+}
+
+// Light & Dark theme tokens
+:root {
+  --bg-primary: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-sidebar: #f1f5f9;
+  --border-color: #e2e8f0;
+  --text-primary: #0f172a;
+  --text-secondary: #64748b;
+  --accent-primary: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-active-bg: #eff6ff;
+  --navbar-height: #{to-vh(72)};
+  --sidebar-width: #{to-vw(260)};
+}
+
+[data-theme='dark'] {
+  --bg-primary: #0b0f17;
+  --bg-surface: #111827;
+  --bg-sidebar: #0e1422;
+  --border-color: #1f2937;
+  --text-primary: #f9fafb;
+  --text-secondary: #9ca3af;
+  --accent-primary: #3b82f6;
+  --accent-hover: #60a5fa;
+  --accent-active-bg: rgba(59, 130, 246, 0.15);
+}

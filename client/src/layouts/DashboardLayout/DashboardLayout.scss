@@ -1,0 +1,23 @@
+@use '../../styles/variables' as *;
+
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+
+  .dashboard-body {
+    display: flex;
+    width: 100%;
+    height: calc(100vh - var(--navbar-height));
+
+    .dashboard-content {
+      flex: 1;
+      height: 100%;
+      overflow-y: auto;
+      padding: to-vh(32) to-vw(40);
+      background-color: var(--bg-primary);
+    }
+  }
+}

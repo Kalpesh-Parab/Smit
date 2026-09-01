@@ -1,0 +1,23 @@
+@use '../../styles/variables' as *;
+
+.invoices-page-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  .section-header {
+    margin-bottom: to-vh(24);
+
+    .section-title {
+      font-size: to-vw(24);
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: to-vh(6);
+    }
+
+    .section-subtitle {
+      font-size: to-vw(14);
+      color: var(--text-secondary);
+    }
+  }
+}

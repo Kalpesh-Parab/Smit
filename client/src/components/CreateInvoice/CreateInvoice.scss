@@ -1,0 +1,117 @@
+@use '../../styles/variables' as *;
+
+.create-invoice-card {
+  background-color: var(--bg-surface);
+  border: to-vh(1) solid var(--border-color);
+  border-radius: to-vw(12);
+  padding: to-vh(24) to-vw(28);
+  margin-bottom: to-vh(28);
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: to-vh(20);
+
+    .header-title {
+      display: flex;
+      align-items: center;
+      gap: to-vw(8);
+      color: var(--accent-primary);
+
+      h3 {
+        font-size: to-vw(18);
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+    }
+
+    .cancel-edit-btn {
+      display: flex;
+      align-items: center;
+      gap: to-vw(6);
+      font-size: to-vw(13);
+      color: #ef4444;
+      padding: to-vh(4) to-vw(8);
+      border-radius: to-vw(6);
+      border: to-vh(1) solid rgba(239, 68, 68, 0.2);
+
+      &:hover {
+        background-color: rgba(239, 68, 68, 0.1);
+      }
+    }
+  }
+
+  .invoice-form {
+    display: flex;
+    flex-direction: column;
+    gap: to-vh(16);
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: to-vh(16) to-vw(16);
+
+      &.finance-grid {
+        background-color: var(--bg-primary);
+        padding: to-vh(16) to-vw(16);
+        border-radius: to-vw(10);
+        border: to-vh(1) solid var(--border-color);
+      }
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: to-vh(6);
+
+      label {
+        font-size: to-vw(13);
+        font-weight: 600;
+        color: var(--text-secondary);
+      }
+
+      input {
+        height: to-vh(40);
+        padding: 0 to-vw(12);
+        background-color: var(--bg-surface);
+        border: to-vh(1) solid var(--border-color);
+        border-radius: to-vw(8);
+        font-size: to-vw(14);
+        color: var(--text-primary);
+        outline: none;
+
+        &:focus {
+          border-color: var(--accent-primary);
+        }
+
+        &.readonly-input {
+          background-color: var(--bg-primary);
+          color: var(--text-secondary);
+          font-weight: 600;
+          cursor: not-allowed;
+        }
+      }
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: to-vh(8);
+
+      .submit-invoice-btn {
+        background-color: var(--accent-primary);
+        color: #ffffff;
+        font-weight: 600;
+        font-size: to-vw(14);
+        padding: to-vh(10) to-vw(24);
+        border-radius: to-vw(8);
+        transition: background-color 0.2s ease;
+
+        &:hover {
+          background-color: var(--accent-hover);
+        }
+      }
+    }
+  }
+}
