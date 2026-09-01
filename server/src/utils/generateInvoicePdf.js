@@ -277,7 +277,7 @@ export const createInvoicePdfBuffer = (invoice) => {
       .fillColor('#94a3b8')
       .fontSize(7)
       .font('Helvetica')
-      .text('System Crafted by KodeR Studio • www.koderstudio.com', 40, 780, {
+      .text('System Crafted by KodeR Studio • instagram.com/koder_studio/', 40, 780, {
         align: 'center',
         width: 515,
       });
