@@ -17,9 +17,12 @@ export default function WhatsAppModal({ isOpen, onClose }) {
 
   const fetchStatus = async (isManual = false) => {
     try {
-      const res = await axios.get('http://localhost:5000/api/whatsapp/status', {
-        withCredentials: true,
-      });
+      const res = await axios.get(
+        'https://smit-x7hq.onrender.com/api/whatsapp/status',
+        {
+          withCredentials: true,
+        },
+      );
       setStatus(res.data);
       if (isManual && res.data.connected) {
         toast.success('WhatsApp Bot is active and connected!');
@@ -53,7 +56,7 @@ export default function WhatsAppModal({ isOpen, onClose }) {
     try {
       setDisconnecting(true);
       await axios.post(
-        'http://localhost:5000/api/whatsapp/logout',
+        'https://smit-x7hq.onrender.com/api/whatsapp/logout',
         {},
         { withCredentials: true },
       );

@@ -26,9 +26,12 @@ export default function Navbar() {
 
   const pollStatus = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/whatsapp/status', {
-        withCredentials: true,
-      });
+      const res = await axios.get(
+        'https://smit-x7hq.onrender.com/api/whatsapp/status',
+        {
+          withCredentials: true,
+        },
+      );
       setIsWaConnected(Boolean(res.data.connected));
     } catch {
       setIsWaConnected(false);

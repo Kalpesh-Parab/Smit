@@ -25,7 +25,7 @@ export default function InvoiceHistory({
   const handleDownloadPDF = (inv) => {
     try {
       window.open(
-        `http://localhost:5000/api/invoices/${inv._id}/pdf`,
+        `https://smit-x7hq.onrender.com/api/invoices/${inv._id}/pdf`,
         '_blank',
       );
     } catch {
@@ -40,7 +40,7 @@ export default function InvoiceHistory({
       toast.loading(`Sending PDF to ${inv.partyName}...`);
 
       const res = await axios.post(
-        `http://localhost:5000/api/whatsapp/send-invoice/${inv._id}`,
+        `https://smit-x7hq.onrender.com/api/whatsapp/send-invoice/${inv._id}`,
         {},
         { withCredentials: true },
       );

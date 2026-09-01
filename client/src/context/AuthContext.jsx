@@ -51,7 +51,7 @@ export const AuthProvider = ({ children }) => {
     // 2. Fetch Google Contacts through backend proxy
     try {
       const contactsRes = await axios.get(
-        'http://localhost:5000/api/contacts',
+        'https://smit-x7hq.onrender.com/api/contacts',
         {
           headers: { 'x-google-access-token': token },
         },
