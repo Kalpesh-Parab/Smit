@@ -16,6 +16,16 @@ export let latestQrDataUrl = null;
 let isConnecting = false;
 const AUTH_DIR = path.join(process.cwd(), 'baileys_auth_info');
 
+export const getWhatsappStatus = () => {
+  const credsExist = fs.existsSync(path.join(AUTH_DIR, 'creds.json'));
+  const isOnline = isWhatsappConnected || Boolean(sock?.user && credsExist);
+
+  return {
+    connected: isOnline,
+    qrCode: isOnline ? null : latestQrDataUrl,
+  };
+};
+
 export const connectToWhatsApp = async () => {
   if (isConnecting) return;
   isConnecting = true;
@@ -58,33 +68,28 @@ export const connectToWhatsApp = async () => {
 
       if (connection === 'close') {
         isConnecting = false;
-        isWhatsappConnected = false;
-        latestQrDataUrl = null;
-
         const statusCode = lastDisconnect?.error?.output?.statusCode;
         const shouldReconnect = statusCode !== DisconnectReason.loggedOut;
 
-        console.log(
-          `⚠️ [WhatsApp] Connection closed (Code: ${statusCode || 'Unknown'}). Reconnecting: ${shouldReconnect}`,
-        );
+        console.log(`⚠️ [WhatsApp] Connection closed (Code: ${statusCode || 'Unknown'}). Reconnecting: ${shouldReconnect}`);
 
         if (statusCode === DisconnectReason.loggedOut) {
-          console.log('🧹 [WhatsApp] Logged out. Wiping auth folder...');
+          isWhatsappConnected = false;
+          latestQrDataUrl = null;
+          console.log('🧹 [WhatsApp] Explicitly logged out. Wiping auth folder...');
           if (fs.existsSync(AUTH_DIR)) {
             fs.rmSync(AUTH_DIR, { recursive: true, force: true });
           }
           setTimeout(() => connectToWhatsApp(), 2000);
         } else {
-          // Automatic reconnect on network drops or temporary 515 restart requirements
-          setTimeout(() => connectToWhatsApp(), 3000);
+          // Reconnect smoothly without zeroing out state for code 515/network blips
+          setTimeout(() => connectToWhatsApp(), 2000);
         }
       } else if (connection === 'open') {
         isConnecting = false;
         isWhatsappConnected = true;
         latestQrDataUrl = null;
-        console.log(
-          '✅ [WhatsApp] Baileys Socket paired & connected successfully!',
-        );
+        console.log('✅ [WhatsApp] Baileys Socket paired & connected successfully!');
       }
     });
   } catch (error) {
@@ -100,10 +105,9 @@ export const sendPDFInvoice = async ({
   fileName,
   caption,
 }) => {
-  if (!sock || !isWhatsappConnected) {
-    throw new Error(
-      'WhatsApp bot is not connected. Please connect via QR code first.',
-    );
+  const status = getWhatsappStatus();
+  if (!sock || !status.connected) {
+    throw new Error('WhatsApp bot is not connected. Please connect via QR code first.');
   }
 
   let cleanPhone = phone.replace(/\D/g, '');
@@ -112,7 +116,6 @@ export const sendPDFInvoice = async ({
   }
   const formattedJid = `${cleanPhone}@s.whatsapp.net`;
 
-  // 15-second timeout guard to prevent API hangs
   const sendPromise = sock.sendMessage(formattedJid, {
     document: pdfBuffer,
     mimetype: 'application/pdf',
@@ -123,8 +126,8 @@ export const sendPDFInvoice = async ({
   const timeoutPromise = new Promise((_, reject) =>
     setTimeout(
       () => reject(new Error('WhatsApp message delivery timed out after 15s')),
-      15000,
-    ),
+      15000
+    )
   );
 
   return Promise.race([sendPromise, timeoutPromise]);

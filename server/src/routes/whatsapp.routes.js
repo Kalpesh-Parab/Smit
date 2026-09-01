@@ -5,15 +5,14 @@ import Invoice from '../models/Invoice.model.js';
 import { createInvoicePdfBuffer } from '../utils/generateInvoicePdf.js';
 import {
   sock,
-  isWhatsappConnected,
-  latestQrDataUrl,
+  getWhatsappStatus,
   connectToWhatsApp,
   sendPDFInvoice,
 } from '../services/whatsapp/baileys.service.js';
 
 const router = express.Router();
 
-// 1. Status route with anti-caching headers
+// 1. Status route with anti-caching headers and rock-solid state check
 router.get('/status', (req, res) => {
   res.setHeader(
     'Cache-Control',
@@ -22,10 +21,8 @@ router.get('/status', (req, res) => {
   res.setHeader('Pragma', 'no-cache');
   res.setHeader('Expires', '0');
 
-  res.json({
-    connected: isWhatsappConnected,
-    qrCode: latestQrDataUrl,
-  });
+  const status = getWhatsappStatus();
+  res.json(status);
 });
 
 // 2. Disconnect / Logout route
@@ -64,7 +61,6 @@ router.post('/send-invoice/:invoiceId', async (req, res) => {
         .json({ success: false, message: 'Customer phone number is missing' });
     }
 
-    // Generate ~5 KB PDF buffer instantly
     const pdfBuffer = await createInvoicePdfBuffer(invoice);
 
     const caption = `Dear *${invoice.partyName}*,\n\nPlease find attached your official invoice *#${invoice.invoiceNumber}* from *Smit Office*.\n\n*Total Amount:* ₹${invoice.totalBill}\n*Paid:* ₹${invoice.paidAmount}\n*Balance:* ₹${invoice.remainingAmount}\n\nThank you for your business!`;
@@ -81,12 +77,10 @@ router.post('/send-invoice/:invoiceId', async (req, res) => {
       .json({ success: true, message: 'Invoice PDF sent via WhatsApp!' });
   } catch (error) {
     console.error('[WhatsApp Send Error]:', error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: error.message || 'Failed to dispatch invoice',
-      });
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Failed to dispatch invoice',
+    });
   }
 });
 
