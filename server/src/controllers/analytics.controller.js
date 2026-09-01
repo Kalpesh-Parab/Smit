@@ -15,7 +15,15 @@ const EXPENSE_CATEGORIES = [
 
 export const getAnalytics = async (req, res) => {
   try {
-    const { service, filterType, month, year, startDate, endDate } = req.query;
+    const {
+      service,
+      filterType = 'this-month',
+      month,
+      year,
+      singleDate,
+      startDate,
+      endDate,
+    } = req.query;
     const now = new Date();
 
     let dateQuery = {};
@@ -43,6 +51,12 @@ export const getAnalytics = async (req, res) => {
         59,
         999,
       );
+      dateQuery = { date: { $gte: start, $lte: end } };
+    } else if (filterType === 'single-day' && singleDate) {
+      const start = new Date(singleDate);
+      start.setHours(0, 0, 0, 0);
+      const end = new Date(singleDate);
+      end.setHours(23, 59, 59, 999);
       dateQuery = { date: { $gte: start, $lte: end } };
     } else if (
       filterType === 'custom-month' &&
@@ -92,12 +106,10 @@ export const getAnalytics = async (req, res) => {
     );
     const netProfit = totalCollected - totalExpenses;
 
-    // Fuel Expense Calculation
     const fuelExpense = expenses
       .filter((exp) => exp.category === 'Fuel / Diesel')
       .reduce((sum, exp) => sum + (exp.amount || 0), 0);
 
-    // Dynamic Category Breakdown for the horizontal bar chart
     const categoryBreakdown = EXPENSE_CATEGORIES.map((cat) => {
       const total = expenses
         .filter((exp) => exp.category === cat)

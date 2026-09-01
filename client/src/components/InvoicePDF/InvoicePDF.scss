@@ -5,13 +5,15 @@
 }
 
 .invoice-document {
-  width: 794px; /* A4 width standard in px */
-  min-height: 1123px; /* A4 height standard in px */
+  width: 794px;
+  min-height: 1123px;
   background: #ffffff;
   color: #1f2937;
-  padding: 48px;
+  padding: 44px 48px;
   box-sizing: border-box;
   font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
 
   .doc-header {
     display: flex;
@@ -61,13 +63,13 @@
   .divider {
     border: none;
     border-top: 2px solid #e2e8f0;
-    margin: 20px 0 24px;
+    margin: 18px 0 20px;
   }
 
   .doc-meta-grid {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 28px;
+    margin-bottom: 24px;
 
     .meta-block {
       display: flex;
@@ -93,7 +95,7 @@
 
       &.right {
         text-align: right;
-        gap: 8px;
+        gap: 6px;
 
         strong {
           font-size: 13px;
@@ -128,7 +130,7 @@
   .doc-table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 28px;
+    margin-bottom: 24px;
 
     th {
       background-color: #f8fafc;
@@ -146,7 +148,7 @@
     }
 
     td {
-      padding: 12px 14px;
+      padding: 11px 14px;
       border-bottom: 1px solid #f1f5f9;
       font-size: 13px;
       color: #334155;
@@ -161,21 +163,20 @@
   .doc-bottom-grid {
     display: flex;
     justify-content: space-between;
-    margin-top: 10px;
+    margin-bottom: 24px;
 
     .notes-block {
       width: 50%;
-
       .label {
         font-size: 10px;
         font-weight: 700;
         color: #94a3b8;
       }
-
       p {
         font-size: 12px;
         color: #64748b;
         margin-top: 4px;
+        line-height: 1.4;
       }
     }
 
@@ -183,7 +184,7 @@
       width: 40%;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
 
       .total-row {
         display: flex;
@@ -197,9 +198,8 @@
 
         &.grand {
           border-top: 2px solid #0f172a;
-          padding-top: 8px;
+          padding-top: 6px;
           font-size: 15px;
-
           strong {
             font-size: 16px;
           }
@@ -215,10 +215,52 @@
     }
   }
 
+  /* Promotional Service Banner */
+  .promo-services-banner {
+    margin-top: auto;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 12px 16px;
+
+    .promo-title {
+      font-size: 10px;
+      font-weight: 700;
+      color: #2563eb;
+      letter-spacing: 0.05em;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .promo-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+      .promo-item {
+        font-size: 11px;
+        color: #475569;
+        strong {
+          color: #1e293b;
+        }
+      }
+    }
+  }
+
+  /* Footer & KodeR Studio Branding */
   .doc-footer {
-    margin-top: 70px;
+    margin-top: 24px;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: flex-end;
+
+    .koder-credit {
+      font-size: 10px;
+      color: #94a3b8;
+      strong {
+        color: #64748b;
+      }
+    }
 
     .sig-area {
       display: flex;
@@ -226,9 +268,9 @@
       align-items: center;
 
       .sig-line {
-        width: 160px;
+        width: 150px;
         border-bottom: 1px solid #94a3b8;
-        margin-bottom: 6px;
+        margin-bottom: 4px;
       }
 
       span {

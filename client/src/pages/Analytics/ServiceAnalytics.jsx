@@ -19,7 +19,7 @@ export default function ServiceAnalytics({
 }) {
   const [metrics, setMetrics] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [filterParams, setFilterParams] = useState({ filterType: 'all' });
+  const [filterParams, setFilterParams] = useState({ filterType: 'this-month' });
 
   const fetchServiceData = async () => {
     try {

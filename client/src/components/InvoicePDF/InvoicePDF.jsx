@@ -140,7 +140,7 @@ const InvoicePDF = forwardRef(({ invoice }, ref) => {
           </tbody>
         </table>
 
-        {/* Totals & Notes */}
+        {/* Totals & Remarks */}
         <div className='doc-bottom-grid'>
           <div className='notes-block'>
             <span className='label'>REMARKS / NOTES:</span>
@@ -169,8 +169,32 @@ const InvoicePDF = forwardRef(({ invoice }, ref) => {
           </div>
         </div>
 
-        {/* Footer Signature */}
+        {/* Promotional Cross-Service Showcase */}
+        <div className='promo-services-banner'>
+          <span className='promo-title'>
+            OUR 24/7 FLEET & LOGISTICS SERVICES
+          </span>
+          <div className='promo-grid'>
+            <div className='promo-item'>
+              <strong>🚑 Emergency Ambulances:</strong> ICU, Cardiac & Basic
+              Life Support units.
+            </div>
+            <div className='promo-item'>
+              <strong>⚡ Power Generators:</strong> 3.5 kVA to 125+ kVA Silent &
+              Mobile DG Sets.
+            </div>
+            <div className='promo-item'>
+              <strong>🚚 Towing & Recovery:</strong> 24/7 Roadside assistance &
+              Hydraulic flatbed trucks.
+            </div>
+          </div>
+        </div>
+
+        {/* Footer Signature & Branding */}
         <footer className='doc-footer'>
+          <div className='koder-credit'>
+            Crafted by <strong>KodeR Studio</strong>
+          </div>
           <div className='sig-area'>
             <div className='sig-line'></div>
             <span>Authorized Signatory</span>

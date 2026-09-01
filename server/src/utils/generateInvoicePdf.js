@@ -14,7 +14,7 @@ export const createInvoicePdfBuffer = (invoice) => {
         ? Object.fromEntries(invoice.serviceDetails)
         : invoice.serviceDetails || {};
 
-    // --- Header ---
+    // Header
     doc
       .fillColor('#0f172a')
       .fontSize(22)
@@ -28,7 +28,7 @@ export const createInvoicePdfBuffer = (invoice) => {
       .text('Emergency, Power & Transport Logistics Services', 40, 68)
       .text('Phone: +91 98765 43210  |  Email: info@smitoffice.com', 40, 80);
 
-    // Invoice Badge (Right aligned)
+    // Invoice Badge
     doc
       .fillColor('#2563eb')
       .fontSize(20)
@@ -47,7 +47,6 @@ export const createInvoicePdfBuffer = (invoice) => {
         { align: 'right' },
       );
 
-    // Divider Line
     doc
       .strokeColor('#e2e8f0')
       .lineWidth(1)
@@ -55,7 +54,7 @@ export const createInvoicePdfBuffer = (invoice) => {
       .lineTo(555, 105)
       .stroke();
 
-    // --- Billed To & Status Box ---
+    // Billed To & Status
     doc
       .fillColor('#94a3b8')
       .fontSize(8)
@@ -75,7 +74,6 @@ export const createInvoicePdfBuffer = (invoice) => {
       .text(`Phone: ${invoice.partyPhone || '—'}`, 40, 148)
       .text(`Service: ${(invoice.service || '').toUpperCase()}`, 40, 160);
 
-    // Payment Status Badge
     doc
       .fillColor('#94a3b8')
       .fontSize(8)
@@ -97,7 +95,7 @@ export const createInvoicePdfBuffer = (invoice) => {
         align: 'right',
       });
 
-    // --- Table Header ---
+    // Table Header
     const tableTop = 195;
     doc.rect(40, tableTop, 515, 24).fill('#f8fafc');
 
@@ -109,7 +107,6 @@ export const createInvoicePdfBuffer = (invoice) => {
       .text('DETAILS', 260, tableTop + 7)
       .text('AMOUNT (INR)', 460, tableTop + 7, { align: 'right', width: 85 });
 
-    // --- Table Rows ---
     let y = tableTop + 32;
 
     const addRow = (desc, detail, amount) => {
@@ -171,10 +168,9 @@ export const createInvoicePdfBuffer = (invoice) => {
       addRow('Service Operations', 'Standard Delivery', 'Included');
     }
 
-    // --- Totals Section ---
-    y = Math.max(y + 15, 320);
+    y = Math.max(y + 15, 305);
 
-    // Notes
+    // Remarks
     doc
       .fillColor('#94a3b8')
       .fontSize(8)
@@ -192,7 +188,7 @@ export const createInvoicePdfBuffer = (invoice) => {
         { width: 250 },
       );
 
-    // Summary Box (Right)
+    // Summary Box
     const rightCol = 360;
     doc
       .fillColor('#64748b')
@@ -232,19 +228,59 @@ export const createInvoicePdfBuffer = (invoice) => {
         width: 85,
       });
 
-    // --- Authorized Signatory ---
+    // Promotional Note & Services Box
+    const promoY = 410;
+    doc.rect(40, promoY, 515, 62).fillAndStroke('#f8fafc', '#e2e8f0');
+
+    doc
+      .fillColor('#2563eb')
+      .fontSize(8)
+      .font('Helvetica-Bold')
+      .text('OUR 24/7 FLEET & LOGISTICS SOLUTIONS:', 50, promoY + 8);
+
+    doc
+      .fillColor('#475569')
+      .fontSize(7.5)
+      .font('Helvetica')
+      .text(
+        '• 24/7 ICU & Critical Care Ambulances with trained medical support.',
+        50,
+        promoY + 22,
+      )
+      .text(
+        '• Heavy-duty Diesel Generators (Silent DG Sets from 3.5 kVA to 125+ kVA).',
+        50,
+        promoY + 34,
+      )
+      .text(
+        '• Quick Response Towing Vans & Flatbed Recovery Trucks for all vehicle classes.',
+        50,
+        promoY + 46,
+      );
+
+    // Signatory
     doc
       .strokeColor('#94a3b8')
       .lineWidth(0.5)
-      .moveTo(420, 480)
-      .lineTo(540, 480)
+      .moveTo(420, 520)
+      .lineTo(540, 520)
       .stroke();
 
     doc
       .fillColor('#64748b')
       .fontSize(8)
       .font('Helvetica')
-      .text('Authorized Signatory', 420, 485, { align: 'center', width: 120 });
+      .text('Authorized Signatory', 420, 525, { align: 'center', width: 120 });
+
+    // Minimal KodeR Studio Branding Footer
+    doc
+      .fillColor('#94a3b8')
+      .fontSize(7)
+      .font('Helvetica')
+      .text('System Crafted by KodeR Studio • www.koderstudio.com', 40, 780, {
+        align: 'center',
+        width: 515,
+      });
 
     doc.end();
   });

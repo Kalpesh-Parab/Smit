@@ -13,13 +13,13 @@
     border: to-vh(1) solid var(--border-color);
     border-radius: to-vw(10);
     padding: to-vh(4) to-vw(4);
-    gap: to-vw(4);
+    gap: to-vw(3);
 
     .filter-btn {
       display: inline-flex;
       align-items: center;
-      gap: to-vw(6);
-      padding: to-vh(6) to-vw(14);
+      gap: to-vw(5);
+      padding: to-vh(6) to-vw(12);
       border-radius: to-vw(7);
       font-size: to-vw(13);
       font-weight: 500;
@@ -38,14 +38,23 @@
     }
   }
 
-  .custom-dropdowns {
+  .custom-picker-wrap,
+  .custom-dropdowns,
+  .custom-range-inputs {
     display: flex;
     align-items: center;
     gap: to-vw(8);
 
+    .range-to {
+      font-size: to-vw(12);
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .date-input,
     select {
       height: to-vh(36);
-      padding: 0 to-vw(12);
+      padding: 0 to-vw(10);
       border-radius: to-vw(8);
       background-color: var(--bg-surface);
       border: to-vh(1) solid var(--border-color);

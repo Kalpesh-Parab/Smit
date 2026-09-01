@@ -19,7 +19,7 @@ import './Dashboard.scss';
 export default function Dashboard() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [filterParams, setFilterParams] = useState({ filterType: 'all' });
+  const [filterParams, setFilterParams] = useState({ filterType: 'this-month' });
 
   const fetchStats = async () => {
     try {
