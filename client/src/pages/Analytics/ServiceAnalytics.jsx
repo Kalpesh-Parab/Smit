@@ -7,10 +7,12 @@ import {
   DollarSign,
   Fuel,
   Loader2,
+  Share2,
 } from 'lucide-react';
 import { getItems } from '../../services/api';
 import DateFilter from '../../components/DateFilter/DateFilter';
 import CategoryExpenseChart from '../../components/CategoryExpenseChart/CategoryExpenseChart';
+import SendReportModal from '../../components/SendReportModal/SendReportModal';
 import './ServiceAnalytics.scss';
 
 export default function ServiceAnalytics({
@@ -19,7 +21,22 @@ export default function ServiceAnalytics({
 }) {
   const [metrics, setMetrics] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [filterParams, setFilterParams] = useState({ filterType: 'this-month' });
+  const [filterParams, setFilterParams] = useState({
+    filterType: 'this-month',
+  });
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+
+  const getPeriodLabel = () => {
+    if (filterParams.filterType === 'this-month') return 'This Month';
+    if (filterParams.filterType === 'last-month') return 'Last Month';
+    if (filterParams.filterType === 'single-day')
+      return `Day: ${filterParams.singleDate}`;
+    if (filterParams.filterType === 'custom-range')
+      return `${filterParams.startDate} to ${filterParams.endDate}`;
+    if (filterParams.filterType === 'custom-month')
+      return `Month: ${Number(filterParams.month) + 1}/${filterParams.year}`;
+    return 'All Time';
+  };
 
   const fetchServiceData = async () => {
     try {
@@ -53,7 +70,17 @@ export default function ServiceAnalytics({
             {serviceName.replace('-', ' ')}.
           </p>
         </div>
-        <DateFilter onFilterChange={(params) => setFilterParams(params)} />
+        <div className='actions-cluster'>
+          <DateFilter onFilterChange={(params) => setFilterParams(params)} />
+          <button
+            className='send-report-action-btn'
+            onClick={() => setIsReportModalOpen(true)}
+            title='Send WhatsApp Snapshot Report'
+          >
+            <Share2 size={15} />
+            <span>Send Report</span>
+          </button>
+        </div>
       </div>
 
       {loading ? (
@@ -136,6 +163,14 @@ export default function ServiceAnalytics({
           <CategoryExpenseChart
             data={metrics.categoryBreakdown}
             title={`${serviceName.replace('-', ' ').toUpperCase()} Expenses by Category`}
+          />
+
+          <SendReportModal
+            isOpen={isReportModalOpen}
+            onClose={() => setIsReportModalOpen(false)}
+            serviceName={serviceName}
+            filterParams={filterParams}
+            periodLabel={getPeriodLabel()}
           />
         </>
       )}

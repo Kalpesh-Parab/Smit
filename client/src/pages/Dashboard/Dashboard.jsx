@@ -10,16 +10,33 @@ import {
   Zap,
   Wrench,
   Loader2,
+  Share2,
 } from 'lucide-react';
 import { getItems } from '../../services/api';
 import DateFilter from '../../components/DateFilter/DateFilter';
 import CategoryExpenseChart from '../../components/CategoryExpenseChart/CategoryExpenseChart';
+import SendReportModal from '../../components/SendReportModal/SendReportModal';
 import './Dashboard.scss';
 
 export default function Dashboard() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [filterParams, setFilterParams] = useState({ filterType: 'this-month' });
+  const [filterParams, setFilterParams] = useState({
+    filterType: 'this-month',
+  });
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+
+  const getPeriodLabel = () => {
+    if (filterParams.filterType === 'this-month') return 'This Month';
+    if (filterParams.filterType === 'last-month') return 'Last Month';
+    if (filterParams.filterType === 'single-day')
+      return `Day: ${filterParams.singleDate}`;
+    if (filterParams.filterType === 'custom-range')
+      return `${filterParams.startDate} to ${filterParams.endDate}`;
+    if (filterParams.filterType === 'custom-month')
+      return `Month: ${Number(filterParams.month) + 1}/${filterParams.year}`;
+    return 'All Time';
+  };
 
   const fetchStats = async () => {
     try {
@@ -47,7 +64,17 @@ export default function Dashboard() {
           <h2>Operations & Financial Overview</h2>
           <p>Real-time consolidated analytics across all active services.</p>
         </div>
-        <DateFilter onFilterChange={(params) => setFilterParams(params)} />
+        <div className='actions-cluster'>
+          <DateFilter onFilterChange={(params) => setFilterParams(params)} />
+          <button
+            className='send-report-action-btn'
+            onClick={() => setIsReportModalOpen(true)}
+            title='Send WhatsApp Snapshot Report'
+          >
+            <Share2 size={15} />
+            <span>Send Report</span>
+          </button>
+        </div>
       </div>
 
       {loading ? (
@@ -57,7 +84,6 @@ export default function Dashboard() {
         </div>
       ) : !data ? null : (
         <>
-          {/* 5-Column KPI Cards */}
           <div className='kpi-grid'>
             <div className='kpi-card income'>
               <div className='kpi-icon'>
@@ -129,13 +155,11 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Category Bar Chart */}
           <CategoryExpenseChart
             data={data.categoryBreakdown}
             title='Consolidated Expenses by Category'
           />
 
-          {/* Service Breakdown & Fleet Overview */}
           <div className='insights-grid'>
             <div className='insight-card'>
               <h3>Service Financial Split</h3>
@@ -232,6 +256,14 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
+
+          <SendReportModal
+            isOpen={isReportModalOpen}
+            onClose={() => setIsReportModalOpen(false)}
+            serviceName=''
+            filterParams={filterParams}
+            periodLabel={getPeriodLabel()}
+          />
         </>
       )}
     </div>
