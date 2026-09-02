@@ -18,6 +18,36 @@
       overflow-y: auto;
       padding: to-vh(32) to-vw(40);
       background-color: var(--bg-primary);
+      -webkit-overflow-scrolling: touch;
+    }
+  }
+}
+
+// Tablet & Mobile Viewports (<= 768px)
+@media (max-width: 768px) {
+  .dashboard-container {
+    height: 100dvh; // Supports mobile address bar height
+
+    .dashboard-body {
+      flex-direction: column;
+      height: calc(100dvh - 94px);
+
+      .dashboard-content {
+        padding: 20px 16px;
+      }
+    }
+  }
+}
+
+// Small Mobile Devices (<= 480px)
+@media (max-width: 480px) {
+  .dashboard-container {
+    .dashboard-body {
+      height: calc(100dvh - 86px);
+
+      .dashboard-content {
+        padding: 14px 10px;
+      }
     }
   }
 }

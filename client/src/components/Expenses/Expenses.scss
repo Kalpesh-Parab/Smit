@@ -93,6 +93,7 @@
         padding: to-vh(4) to-vw(8);
         border-radius: to-vw(6);
         border: to-vh(1) solid rgba(239, 68, 68, 0.2);
+        cursor: pointer;
 
         &:hover {
           background-color: rgba(239, 68, 68, 0.1);
@@ -159,6 +160,7 @@
           padding: to-vh(10) to-vw(24);
           border-radius: to-vw(8);
           transition: background-color 0.2s ease;
+          cursor: pointer;
 
           &:hover {
             background-color: var(--accent-hover);
@@ -216,6 +218,7 @@
           position: absolute;
           left: to-vw(10);
           color: var(--text-secondary);
+          pointer-events: none;
         }
 
         input {
@@ -253,8 +256,9 @@
       }
     }
 
-    .table-responsive {
-      overflow-x: auto;
+    /* Desktop Tabular View */
+    .desktop-table-wrapper {
+      display: block;
       width: 100%;
 
       .expenses-table {
@@ -333,6 +337,7 @@
               padding: to-vh(6) to-vw(6);
               border-radius: to-vw(6);
               transition: all 0.15s ease;
+              cursor: pointer;
 
               &.edit {
                 color: var(--accent-primary);
@@ -345,6 +350,392 @@
                 &:hover {
                   background-color: rgba(239, 68, 68, 0.15);
                 }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    /* Mobile Card Stack (Hidden on Desktop) */
+    .mobile-expenses-list {
+      display: none;
+    }
+  }
+}
+
+// Tablet Viewports (<= 768px)
+@media (max-width: 768px) {
+  .expenses-page-container {
+    .section-header {
+      margin-bottom: 18px;
+
+      .section-title {
+        font-size: 20px;
+      }
+      .section-subtitle {
+        font-size: 13px;
+      }
+
+      .total-spend-pill {
+        padding: 8px 14px;
+        border-radius: 8px;
+
+        .spend-text {
+          span {
+            font-size: 10px;
+          }
+          strong {
+            font-size: 16px;
+          }
+        }
+      }
+    }
+
+    .expense-form-card {
+      padding: 18px;
+      border-radius: 12px;
+      margin-bottom: 18px;
+
+      .card-header {
+        margin-bottom: 16px;
+        .header-title h3 {
+          font-size: 16px;
+        }
+      }
+
+      .expense-form {
+        gap: 12px;
+
+        .form-grid,
+        .form-grid.secondary-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 12px;
+        }
+
+        .form-group {
+          label {
+            font-size: 12px;
+          }
+          input,
+          select {
+            height: 38px;
+            font-size: 13px;
+          }
+        }
+
+        .form-actions .submit-expense-btn {
+          font-size: 13px;
+          padding: 8px 20px;
+        }
+      }
+    }
+
+    .expense-history-card {
+      padding: 18px;
+      border-radius: 12px;
+
+      .history-header {
+        margin-bottom: 16px;
+        .title-area h3 {
+          font-size: 16px;
+        }
+        .search-box {
+          width: 220px;
+          input {
+            height: 34px;
+            font-size: 13px;
+          }
+        }
+      }
+
+      // Hide tabular view on mobile
+      .desktop-table-wrapper {
+        display: none;
+      }
+
+      // Show zero-scroll card stack
+      .mobile-expenses-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+
+        .mobile-expense-row {
+          background-color: var(--bg-primary);
+          border: 1px solid var(--border-color);
+          border-radius: 10px;
+          padding: 12px 14px;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+
+          .row-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            .meta-left {
+              display: flex;
+              align-items: center;
+              gap: 8px;
+
+              .exp-date {
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                font-size: 12px;
+                color: var(--text-secondary);
+              }
+
+              .category-pill {
+                font-size: 11px;
+                font-weight: 600;
+                background-color: var(--bg-surface);
+                border: 1px solid var(--border-color);
+                color: var(--text-secondary);
+                padding: 2px 7px;
+                border-radius: 4px;
+              }
+            }
+
+            .pay-mode {
+              display: inline-flex;
+              align-items: center;
+              gap: 4px;
+              font-size: 11px;
+              color: var(--text-secondary);
+            }
+          }
+
+          .row-body {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            border-top: 1px dashed var(--border-color);
+            padding-top: 8px;
+
+            .title-block {
+              display: flex;
+              flex-direction: column;
+              gap: 2px;
+
+              strong {
+                font-size: 14px;
+                color: var(--text-primary);
+              }
+
+              .exp-notes {
+                font-size: 12px;
+                color: var(--text-secondary);
+              }
+            }
+
+            .asset-tag {
+              font-size: 11px;
+              font-weight: 700;
+              font-family: monospace;
+              color: var(--accent-primary);
+              background: rgba(37, 99, 235, 0.1);
+              padding: 2px 6px;
+              border-radius: 4px;
+              white-space: nowrap;
+            }
+          }
+
+          .row-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border-color);
+            padding-top: 8px;
+
+            .amount-block {
+              display: flex;
+              flex-direction: column;
+
+              span {
+                font-size: 10px;
+                color: var(--text-secondary);
+                text-transform: uppercase;
+              }
+
+              strong {
+                font-size: 15px;
+                color: #ef4444;
+                font-weight: 700;
+                font-family: monospace;
+              }
+            }
+
+            .action-buttons {
+              display: flex;
+              align-items: center;
+              gap: 8px;
+
+              .action-btn {
+                width: 32px;
+                height: 32px;
+                border-radius: 6px;
+                border: 1px solid var(--border-color);
+                background-color: var(--bg-surface);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+
+                &.edit {
+                  color: var(--accent-primary);
+                }
+                &.delete {
+                  color: #ef4444;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Mobile Viewports (<= 480px)
+@media (max-width: 480px) {
+  .expenses-page-container {
+    .section-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 16px;
+
+      .section-title {
+        font-size: 18px;
+      }
+      .section-subtitle {
+        font-size: 12px;
+      }
+
+      .total-spend-pill {
+        width: 100%;
+        box-sizing: border-box;
+        justify-content: space-between;
+        padding: 10px 14px;
+      }
+    }
+
+    .expense-form-card {
+      padding: 14px 12px;
+      border-radius: 10px;
+      margin-bottom: 16px;
+
+      .card-header {
+        margin-bottom: 12px;
+        .header-title h3 {
+          font-size: 15px;
+        }
+      }
+
+      .expense-form {
+        gap: 10px;
+
+        .form-grid,
+        .form-grid.secondary-grid {
+          grid-template-columns: 1fr; // Full 1-column layout on phones
+          gap: 10px;
+        }
+
+        .form-group input,
+        .form-group select {
+          height: 40px; // Finger tap-friendly
+          font-size: 14px;
+        }
+
+        .form-actions {
+          margin-top: 6px;
+
+          .submit-expense-btn {
+            width: 100%;
+            justify-content: center;
+            padding: 11px 16px;
+            font-size: 14px;
+          }
+        }
+      }
+    }
+
+    .expense-history-card {
+      padding: 12px 10px;
+
+      .history-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        margin-bottom: 12px;
+
+        .title-area {
+          justify-content: space-between;
+          h3 {
+            font-size: 15px;
+          }
+        }
+
+        .search-box {
+          width: 100%;
+          input {
+            height: 38px;
+            font-size: 13px;
+          }
+        }
+      }
+
+      .mobile-expenses-list {
+        gap: 10px;
+
+        .mobile-expense-row {
+          padding: 10px 12px;
+
+          .row-header {
+            .meta-left {
+              gap: 6px;
+              .exp-date {
+                font-size: 11px;
+              }
+              .category-pill {
+                font-size: 10px;
+                padding: 2px 6px;
+              }
+            }
+            .pay-mode {
+              font-size: 10px;
+            }
+          }
+
+          .row-body {
+            .title-block {
+              strong {
+                font-size: 13px;
+              }
+              .exp-notes {
+                font-size: 11px;
+              }
+            }
+            .asset-tag {
+              font-size: 10px;
+            }
+          }
+
+          .row-footer {
+            .amount-block strong {
+              font-size: 14px;
+            }
+
+            .action-buttons {
+              gap: 6px;
+
+              .action-btn {
+                width: 30px;
+                height: 30px;
               }
             }
           }

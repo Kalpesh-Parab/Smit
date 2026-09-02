@@ -11,7 +11,7 @@
   .chart-title {
     font-size: to-vw(16);
     font-weight: 700;
-    color: #f97316; // Vibrant orange from image
+    color: #f97316;
     margin-bottom: to-vh(20);
     letter-spacing: -0.01em;
   }
@@ -67,6 +67,97 @@
           font-weight: 700;
           color: var(--text-primary);
           font-family: monospace;
+        }
+      }
+    }
+  }
+}
+
+// Tablet Viewports (<= 768px)
+@media (max-width: 768px) {
+  .category-chart-card {
+    padding: 18px;
+    border-radius: 10px;
+
+    .chart-title {
+      font-size: 15px;
+      margin-bottom: 16px;
+    }
+
+    .chart-list {
+      gap: 14px;
+
+      .chart-item {
+        grid-template-columns: 180px 1fr 90px;
+        gap: 12px;
+
+        .label-area .category-label {
+          font-size: 12px;
+        }
+
+        .track-area {
+          height: 6px;
+        }
+
+        .amount-area .amount-label {
+          font-size: 13px;
+        }
+      }
+    }
+  }
+}
+
+// Mobile Viewports (<= 480px)
+// Switches grid into a clean 2-row item: Label and Amount above, progress bar below
+@media (max-width: 480px) {
+  .category-chart-card {
+    padding: 14px 12px;
+
+    .chart-title {
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    .chart-list {
+      gap: 12px;
+
+      .chart-item {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+
+        .label-area {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          width: 100%;
+
+          .category-label {
+            font-size: 12px;
+          }
+        }
+
+        .amount-area {
+          // display: none; // Rendered via pseudo/top row flex
+        }
+
+        // Add inline amount display next to label on mobile
+        .label-area::after {
+          content: attr(data-amount);
+          font-size: 12px;
+          font-weight: 700;
+          font-family: monospace;
+          color: var(--text-primary);
+        }
+
+        .track-area {
+          height: 6px;
+          border-radius: 4px;
+
+          .bar-fill {
+            border-radius: 4px;
+          }
         }
       }
     }

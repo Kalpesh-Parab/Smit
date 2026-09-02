@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import api from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
-import { X, Send, Loader2, Calendar, FileText, User } from 'lucide-react';
+import { formatPeriodLabel } from '../../utils/dateFormatter';
+import { X, Send, Loader2, Calendar, FileText } from 'lucide-react';
 import './SendReportModal.scss';
 
 export default function SendReportModal({
@@ -19,11 +20,13 @@ export default function SendReportModal({
 
   if (!isOpen) return null;
 
+  // Resolve clear period name (e.g. "September 2026")
+  const activePeriod = periodLabel || formatPeriodLabel(filterParams);
+
   const handleContactSelect = (e) => {
     const enteredValue = e.target.value;
     setRecipient(enteredValue);
 
-    // Clean match against name or phone number
     const match = googleContacts.find(
       (c) =>
         c.name?.trim().toLowerCase() === enteredValue.trim().toLowerCase() ||
@@ -31,7 +34,6 @@ export default function SendReportModal({
     );
 
     if (match && match.phone) {
-      // Auto-populate sanitized phone digits
       setPhone(match.phone.replace(/\s+/g, ''));
     }
   };
@@ -47,19 +49,19 @@ export default function SendReportModal({
     try {
       setSubmitting(true);
       toast.loading(
-        `Compiling & sending PDF report to ${recipient || phone}...`,
+        `Compiling & sending PDF report for ${activePeriod} to ${recipient || phone}...`,
       );
 
       const res = await api.post('/whatsapp/send-report', {
         recipientPhone: phone,
         service: serviceName,
-        periodLabel,
+        periodLabel: activePeriod,
         ...filterParams,
       });
 
       toast.dismiss();
       if (res.data.success) {
-        toast.success('Report PDF successfully dispatched to WhatsApp!');
+        toast.success(`Report for ${activePeriod} dispatched to WhatsApp!`);
         onClose();
       }
     } catch (error) {
@@ -84,9 +86,9 @@ export default function SendReportModal({
         </div>
 
         <div className='report-summary-badge'>
-          <Calendar size={14} />
+          <Calendar size={15} />
           <span>
-            Active Period: <strong>{periodLabel || 'This Month'}</strong>
+            Report For: <strong>{activePeriod}</strong>
           </span>
         </div>
 

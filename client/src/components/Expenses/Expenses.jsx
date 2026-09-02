@@ -10,6 +10,7 @@ import {
   TrendingDown,
   X,
   CreditCard,
+  Calendar,
 } from 'lucide-react';
 import {
   getItems,
@@ -52,7 +53,7 @@ export default function Expenses({
     notes: '',
   });
 
-  // Fetch expenses and relevant service fleet assets
+  // Fetch expenses and relevant fleet assets
   const fetchExpensesAndAssets = async () => {
     try {
       setLoading(true);
@@ -339,7 +340,7 @@ export default function Expenses({
         </form>
       </div>
 
-      {/* Expense History Table */}
+      {/* Expense History Card */}
       <div className='expense-history-card'>
         <div className='history-header'>
           <div className='title-area'>
@@ -369,69 +370,133 @@ export default function Expenses({
             <p>No expense logs found.</p>
           </div>
         ) : (
-          <div className='table-responsive'>
-            <table className='expenses-table'>
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Title & Asset</th>
-                  <th>Category</th>
-                  <th>Payment Mode</th>
-                  <th>Amount</th>
-                  <th>Notes</th>
-                  <th className='text-right'>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredExpenses.map((exp) => (
-                  <tr key={exp._id}>
-                    <td>{new Date(exp.date).toLocaleDateString('en-GB')}</td>
-                    <td>
-                      <div className='title-cell'>
-                        <strong>{exp.title}</strong>
-                        {exp.assetReference && (
-                          <span className='asset-tag'>
-                            {exp.assetReference}
-                          </span>
-                        )}
-                      </div>
-                    </td>
-                    <td>
-                      <span className='category-pill'>{exp.category}</span>
-                    </td>
-                    <td>
-                      <div className='pay-mode'>
-                        <CreditCard size={13} />
-                        <span>{exp.paymentMode}</span>
-                      </div>
-                    </td>
-                    <td className='amount-col'>
-                      ₹{exp.amount.toLocaleString('en-IN')}
-                    </td>
-                    <td className='notes-col'>{exp.notes || '—'}</td>
-                    <td>
-                      <div className='action-buttons'>
-                        <button
-                          className='action-btn edit'
-                          title='Edit'
-                          onClick={() => handleEdit(exp)}
-                        >
-                          <Edit3 size={15} />
-                        </button>
-                        <button
-                          className='action-btn delete'
-                          title='Delete'
-                          onClick={() => handleDelete(exp._id)}
-                        >
-                          <Trash2 size={15} />
-                        </button>
-                      </div>
-                    </td>
+          <>
+            {/* Desktop Tabular View (>= 769px) */}
+            <div className='desktop-table-wrapper'>
+              <table className='expenses-table'>
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Title & Asset</th>
+                    <th>Category</th>
+                    <th>Payment Mode</th>
+                    <th>Amount</th>
+                    <th>Notes</th>
+                    <th className='text-right'>Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {filteredExpenses.map((exp) => (
+                    <tr key={exp._id}>
+                      <td>{new Date(exp.date).toLocaleDateString('en-GB')}</td>
+                      <td>
+                        <div className='title-cell'>
+                          <strong>{exp.title}</strong>
+                          {exp.assetReference && (
+                            <span className='asset-tag'>
+                              {exp.assetReference}
+                            </span>
+                          )}
+                        </div>
+                      </td>
+                      <td>
+                        <span className='category-pill'>{exp.category}</span>
+                      </td>
+                      <td>
+                        <div className='pay-mode'>
+                          <CreditCard size={13} />
+                          <span>{exp.paymentMode}</span>
+                        </div>
+                      </td>
+                      <td className='amount-col'>
+                        ₹{exp.amount.toLocaleString('en-IN')}
+                      </td>
+                      <td className='notes-col'>{exp.notes || '—'}</td>
+                      <td>
+                        <div className='action-buttons'>
+                          <button
+                            className='action-btn edit'
+                            title='Edit'
+                            onClick={() => handleEdit(exp)}
+                          >
+                            <Edit3 size={15} />
+                          </button>
+                          <button
+                            className='action-btn delete'
+                            title='Delete'
+                            onClick={() => handleDelete(exp._id)}
+                          >
+                            <Trash2 size={15} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile Zero-Scroll Two-Row Card Stack (<= 768px) */}
+            <div className='mobile-expenses-list'>
+              {filteredExpenses.map((exp) => (
+                <div key={exp._id} className='mobile-expense-row'>
+                  {/* Top Segment: Date, Category & Payment Mode */}
+                  <div className='row-header'>
+                    <div className='meta-left'>
+                      <span className='exp-date'>
+                        <Calendar size={12} />
+                        {new Date(exp.date).toLocaleDateString('en-GB')}
+                      </span>
+                      <span className='category-pill'>{exp.category}</span>
+                    </div>
+                    <div className='pay-mode'>
+                      <CreditCard size={12} />
+                      <span>{exp.paymentMode}</span>
+                    </div>
+                  </div>
+
+                  {/* Body Segment: Title, Asset Tag & Notes */}
+                  <div className='row-body'>
+                    <div className='title-block'>
+                      <strong>{exp.title}</strong>
+                      {exp.notes && (
+                        <small className='exp-notes'>{exp.notes}</small>
+                      )}
+                    </div>
+
+                    {exp.assetReference && (
+                      <span className='asset-tag'>{exp.assetReference}</span>
+                    )}
+                  </div>
+
+                  {/* Footer Segment: Amount & Quick Actions */}
+                  <div className='row-footer'>
+                    <div className='amount-block'>
+                      <span>Amount</span>
+                      <strong>₹{exp.amount.toLocaleString('en-IN')}</strong>
+                    </div>
+
+                    <div className='action-buttons'>
+                      <button
+                        className='action-btn edit'
+                        title='Edit'
+                        onClick={() => handleEdit(exp)}
+                      >
+                        <Edit3 size={14} />
+                      </button>
+                      <button
+                        className='action-btn delete'
+                        title='Delete'
+                        onClick={() => handleDelete(exp._id)}
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
         )}
       </div>
     </div>

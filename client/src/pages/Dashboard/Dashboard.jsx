@@ -17,6 +17,7 @@ import DateFilter from '../../components/DateFilter/DateFilter';
 import CategoryExpenseChart from '../../components/CategoryExpenseChart/CategoryExpenseChart';
 import SendReportModal from '../../components/SendReportModal/SendReportModal';
 import './Dashboard.scss';
+import { formatPeriodLabel } from '../../utils/dateFormatter';
 
 export default function Dashboard() {
   const [data, setData] = useState(null);
@@ -24,6 +25,7 @@ export default function Dashboard() {
   const [filterParams, setFilterParams] = useState({
     filterType: 'this-month',
   });
+  const periodLabel = formatPeriodLabel(filterParams);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
 
   const getPeriodLabel = () => {
@@ -262,7 +264,7 @@ export default function Dashboard() {
             onClose={() => setIsReportModalOpen(false)}
             serviceName=''
             filterParams={filterParams}
-            periodLabel={getPeriodLabel()}
+            periodLabel={periodLabel}
           />
         </>
       )}

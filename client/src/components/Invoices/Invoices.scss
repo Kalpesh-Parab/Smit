@@ -21,3 +21,36 @@
     }
   }
 }
+
+// Tablet Viewports (<= 768px)
+@media (max-width: 768px) {
+  .invoices-page-container {
+    .section-header {
+      margin-bottom: 18px;
+
+      .section-title {
+        font-size: 20px;
+        margin-bottom: 4px;
+      }
+      .section-subtitle {
+        font-size: 13px;
+      }
+    }
+  }
+}
+
+// Mobile Viewports (<= 480px)
+@media (max-width: 480px) {
+  .invoices-page-container {
+    .section-header {
+      margin-bottom: 14px;
+
+      .section-title {
+        font-size: 18px;
+      }
+      .section-subtitle {
+        font-size: 12px;
+      }
+    }
+  }
+}

@@ -26,6 +26,86 @@ const EXPENSE_CATEGORIES = [
   'Other',
 ];
 
+const MONTH_NAMES = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
+
+// Helper: Formats formal period string (e.g., "September 2026", "August 2026", "02 September 2026")
+const resolveFormalPeriod = ({
+  filterType,
+  month,
+  year,
+  singleDate,
+  startDate,
+  endDate,
+  periodLabel,
+}) => {
+  const now = new Date();
+
+  // If a valid formatted string was already passed (and is not generic "this-month"), respect it
+  if (
+    periodLabel &&
+    periodLabel !== 'this-month' &&
+    periodLabel !== 'last-month' &&
+    periodLabel !== 'This Month' &&
+    periodLabel !== 'Last Month'
+  ) {
+    return periodLabel;
+  }
+
+  if (filterType === 'this-month') {
+    return `${MONTH_NAMES[now.getMonth()]} ${now.getFullYear()}`;
+  }
+
+  if (filterType === 'last-month') {
+    const prev = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    return `${MONTH_NAMES[prev.getMonth()]} ${prev.getFullYear()}`;
+  }
+
+  if (filterType === 'custom-month' && month !== undefined) {
+    const m = parseInt(month, 10);
+    const y = year || now.getFullYear();
+    return `${MONTH_NAMES[m] || 'Unknown'} ${y}`;
+  }
+
+  if (filterType === 'single-day' && singleDate) {
+    const d = new Date(singleDate);
+    if (!isNaN(d.getTime())) {
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${day} ${MONTH_NAMES[d.getMonth()]} ${d.getFullYear()}`;
+    }
+    return singleDate;
+  }
+
+  if (filterType === 'custom-range' && startDate && endDate) {
+    const s = new Date(startDate);
+    const e = new Date(endDate);
+    const formatPart = (d) => {
+      const day = String(d.getDate()).padStart(2, '0');
+      const mShort = MONTH_NAMES[d.getMonth()].slice(0, 3);
+      return `${day} ${mShort} ${d.getFullYear()}`;
+    };
+    return `${formatPart(s)} to ${formatPart(e)}`;
+  }
+
+  if (filterType === 'all') {
+    return 'All Time Consolidated';
+  }
+
+  return `${MONTH_NAMES[now.getMonth()]} ${now.getFullYear()}`;
+};
+
 // 1. Status route with anti-caching headers
 router.get('/status', (req, res) => {
   res.setHeader(
@@ -114,14 +194,13 @@ router.post('/send-report', async (req, res) => {
     } = req.body;
 
     if (!recipientPhone) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: 'Recipient phone number is required',
-        });
+      return res.status(400).json({
+        success: false,
+        message: 'Recipient phone number is required',
+      });
     }
 
+    // Resolve date query bounds
     const now = new Date();
     let dateQuery = {};
 
@@ -255,18 +334,29 @@ router.post('/send-report', async (req, res) => {
       serviceBreakdown,
     };
 
+    // Calculate clean period text (e.g., "September 2026")
+    const formalPeriod = resolveFormalPeriod({
+      filterType,
+      month,
+      year,
+      singleDate,
+      startDate,
+      endDate,
+      periodLabel,
+    });
+
     const reportTitle = service
       ? `${service.replace('-', ' ')} Service Report`
       : 'Operations & Financial Report';
 
     const pdfBuffer = await createReportPdfBuffer({
       reportTitle,
-      periodLabel: periodLabel || 'Current Active Period',
+      periodLabel: formalPeriod,
       analyticsData,
       serviceName: service,
     });
 
-    const caption = `📊 *Smit Office - ${reportTitle}*\n🗓️ *Period:* ${periodLabel || 'Active Filter'}\n\n• *Collected:* ₹${totalCollected.toLocaleString('en-IN')}\n• *Pending:* ₹${totalPending.toLocaleString('en-IN')}\n• *Fuel Exp:* ₹${fuelExpense.toLocaleString('en-IN')}\n• *Total Exp:* ₹${totalExpenses.toLocaleString('en-IN')}\n• *Net Profit:* ₹${netProfit.toLocaleString('en-IN')}\n\n_Please find attached the detailed PDF audit report._`;
+    const caption = `📊 *Smit Office - ${reportTitle}*\n🗓️ *Period:* ${formalPeriod}\n\n• *Collected:* ₹${totalCollected.toLocaleString('en-IN')}\n• *Pending:* ₹${totalPending.toLocaleString('en-IN')}\n• *Fuel Exp:* ₹${fuelExpense.toLocaleString('en-IN')}\n• *Total Exp:* ₹${totalExpenses.toLocaleString('en-IN')}\n• *Net Profit:* ₹${netProfit.toLocaleString('en-IN')}\n\n_Please find attached the detailed PDF audit report._`;
 
     await sendPDFInvoice({
       phone: recipientPhone,

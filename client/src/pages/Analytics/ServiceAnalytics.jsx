@@ -14,6 +14,7 @@ import DateFilter from '../../components/DateFilter/DateFilter';
 import CategoryExpenseChart from '../../components/CategoryExpenseChart/CategoryExpenseChart';
 import SendReportModal from '../../components/SendReportModal/SendReportModal';
 import './ServiceAnalytics.scss';
+import { formatPeriodLabel } from '../../utils/dateFormatter';
 
 export default function ServiceAnalytics({
   serviceName = 'ambulance',
@@ -24,6 +25,7 @@ export default function ServiceAnalytics({
   const [filterParams, setFilterParams] = useState({
     filterType: 'this-month',
   });
+  const periodLabel = formatPeriodLabel(filterParams);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
 
   const getPeriodLabel = () => {
@@ -170,7 +172,7 @@ export default function ServiceAnalytics({
             onClose={() => setIsReportModalOpen(false)}
             serviceName={serviceName}
             filterParams={filterParams}
-            periodLabel={getPeriodLabel()}
+            periodLabel={periodLabel}
           />
         </>
       )}

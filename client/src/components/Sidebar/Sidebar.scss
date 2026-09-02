@@ -57,3 +57,70 @@
     }
   }
 }
+
+// Tablet & Mobile Viewports (<= 768px)
+// Sidebar converts into a clean horizontal sub-navigation bar
+@media (max-width: 768px) {
+  .dashboard-sidebar {
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+    padding: 8px 12px;
+    flex-direction: row;
+    align-items: center;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+      display: none; // Cleaner look
+    }
+
+    .sidebar-header {
+      display: none; // Saved screen real estate on mobile
+    }
+
+    .sidebar-menu {
+      flex-direction: row;
+      gap: 8px;
+      width: 100%;
+
+      .menu-item {
+        padding: 6px 12px;
+        font-size: 13px;
+        border-radius: 6px;
+        gap: 6px;
+        flex-shrink: 0;
+
+        .menu-icon {
+          width: 15px;
+          height: 15px;
+        }
+      }
+    }
+  }
+}
+
+// Small Mobile Devices (<= 480px)
+@media (max-width: 480px) {
+  .dashboard-sidebar {
+    padding: 6px 8px;
+
+    .sidebar-menu {
+      justify-content: center;
+      gap: 6px;
+
+      .menu-item {
+        padding: 6px 10px;
+        font-size: 12px;
+        border-radius: 6px;
+
+        .menu-icon {
+          width: 14px;
+          height: 14px;
+        }
+      }
+    }
+  }
+}

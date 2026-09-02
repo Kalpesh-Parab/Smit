@@ -129,6 +129,7 @@
     }
   }
 }
+
 .actions-cluster {
   display: flex;
   align-items: center;
@@ -145,9 +146,152 @@
     font-size: to-vw(13);
     font-weight: 600;
     transition: background-color 0.2s ease;
+    cursor: pointer;
+    white-space: nowrap;
 
     &:hover {
       background-color: #1d4ed8;
+    }
+  }
+}
+
+// Tablet Viewports (<= 768px)
+@media (max-width: 768px) {
+  .service-analytics-page {
+    gap: 18px;
+
+    .analytics-header-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 14px;
+
+      .title-area {
+        .section-title {
+          font-size: 20px;
+        }
+        .section-subtitle {
+          font-size: 13px;
+        }
+      }
+    }
+
+    .actions-cluster {
+      width: 100%;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+
+      .send-report-action-btn {
+        padding: 7px 12px;
+        font-size: 12px;
+      }
+    }
+
+    .metrics-grid {
+      grid-template-columns: repeat(2, 1fr); // 2 cards per row
+      gap: 12px;
+
+      .metric-card {
+        padding: 14px;
+        border-radius: 10px;
+
+        .icon-wrap {
+          width: 36px;
+          height: 36px;
+        }
+
+        span {
+          font-size: 10px;
+        }
+        h3 {
+          font-size: 16px;
+        }
+        small {
+          font-size: 10px;
+        }
+      }
+    }
+
+    .net-profit-card {
+      padding: 16px 18px;
+      border-radius: 10px;
+
+      .profit-text {
+        span {
+          font-size: 12px;
+        }
+        h2 {
+          font-size: 22px;
+        }
+      }
+    }
+  }
+}
+
+// Mobile Viewports (<= 480px)
+@media (max-width: 480px) {
+  .service-analytics-page {
+    gap: 14px;
+
+    .analytics-header-row {
+      .title-area {
+        .section-title {
+          font-size: 18px;
+        }
+        .section-subtitle {
+          font-size: 12px;
+        }
+      }
+    }
+
+    .actions-cluster {
+      flex-direction: column;
+      align-items: stretch;
+
+      .send-report-action-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 9px 14px;
+        font-size: 13px;
+      }
+    }
+
+    .metrics-grid {
+      grid-template-columns: 1fr; // Single column vertical cards on mobile
+      gap: 10px;
+
+      .metric-card {
+        padding: 12px;
+        flex-direction: row;
+        align-items: center;
+        gap: 12px;
+
+        .icon-wrap {
+          width: 38px;
+          height: 38px;
+          margin-bottom: 0;
+          flex-shrink: 0;
+        }
+
+        .metric-info {
+          display: flex;
+          flex-direction: column;
+        }
+
+        h3 {
+          font-size: 15px;
+        }
+      }
+    }
+
+    .net-profit-card {
+      padding: 14px 12px;
+
+      .profit-text {
+        h2 {
+          font-size: 20px;
+        }
+      }
     }
   }
 }

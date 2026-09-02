@@ -11,11 +11,15 @@
   padding: 0 to-vw(32);
   position: relative;
   z-index: 50;
+  box-sizing: border-box;
 
   .navbar-brand {
     display: flex;
     align-items: center;
     gap: to-vw(12);
+    text-decoration: none;
+    color: inherit;
+    flex-shrink: 0;
 
     .brand-icon {
       color: var(--accent-primary);
@@ -61,6 +65,7 @@
     display: flex;
     align-items: center;
     gap: to-vw(16);
+    flex-shrink: 0;
 
     .wa-status-pill {
       display: flex;
@@ -72,6 +77,7 @@
       font-weight: 600;
       border: to-vh(1) solid transparent;
       transition: all 0.2s ease;
+      cursor: pointer;
 
       .pulse-dot {
         width: to-vw(8);
@@ -110,7 +116,9 @@
       align-items: center;
       justify-content: center;
       background-color: var(--bg-primary);
+      color: var(--text-primary);
       transition: background-color 0.2s ease;
+      cursor: pointer;
 
       &:hover {
         background-color: var(--border-color);
@@ -134,10 +142,17 @@
           object-fit: cover;
         }
 
+        .user-name-label {
+          font-size: to-vw(13);
+          font-weight: 500;
+          color: var(--text-primary);
+        }
+
         .logout-btn {
           color: var(--text-secondary);
           padding: to-vh(6) to-vw(6);
           border-radius: to-vw(6);
+          cursor: pointer;
 
           &:hover {
             color: #ef4444;
@@ -145,26 +160,43 @@
           }
         }
       }
+
+      .google-signin-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 12px;
+        background: var(--accent-primary);
+        color: #ffffff;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 600;
+      }
     }
   }
 }
 
+/* Reusable Modal Layer */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.55);
   backdrop-filter: blur(to-vw(4));
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 100;
+  padding: 16px;
+  box-sizing: border-box;
 
   .wa-modal-content {
     width: to-vw(420);
+    max-width: 100%;
     background-color: var(--bg-surface);
     border: to-vh(1) solid var(--border-color);
     border-radius: to-vw(14);
     padding: to-vh(24) to-vw(28);
+    box-sizing: border-box;
 
     .modal-header {
       display: flex;
@@ -176,6 +208,14 @@
         font-size: to-vw(18);
         font-weight: 700;
         color: var(--text-primary);
+      }
+
+      .close-btn {
+        color: var(--text-secondary);
+        cursor: pointer;
+        &:hover {
+          color: var(--text-primary);
+        }
       }
     }
 
@@ -225,6 +265,11 @@
           padding: to-vh(16) to-vw(16);
           border-radius: to-vw(12);
           border: to-vh(1) solid var(--border-color);
+
+          img {
+            max-width: 100%;
+            height: auto;
+          }
         }
       }
 
@@ -241,5 +286,202 @@
         }
       }
     }
+  }
+}
+
+// Tablet & Mid Viewports (<= 768px)
+@media (max-width: 768px) {
+  .top-navbar {
+    height: auto;
+    min-height: 94px;
+    padding: 10px 16px 0;
+    flex-wrap: wrap;
+
+    .navbar-brand {
+      order: 1;
+      .brand-name {
+        font-size: 16px;
+      }
+    }
+
+    .navbar-actions {
+      order: 2;
+      gap: 10px;
+
+      .wa-status-pill {
+        padding: 5px 10px;
+        font-size: 12px;
+      }
+
+      .theme-toggle-btn {
+        width: 34px;
+        height: 34px;
+      }
+
+      .auth-profile-wrapper {
+        .user-profile {
+          .user-name-label {
+            display: none;
+          }
+          .user-avatar {
+            width: 32px;
+            height: 32px;
+          }
+        }
+      }
+    }
+
+    // Row 2: Full width service tabs
+    .navbar-services {
+      order: 3;
+      width: 100%;
+      height: 40px;
+      margin-top: 8px;
+      border-top: 1px solid var(--border-color);
+      overflow-x: auto;
+      gap: 4px;
+      -webkit-overflow-scrolling: touch;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+      .service-tab {
+        padding: 0 14px;
+        font-size: 13px;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+    }
+  }
+
+  .modal-overlay {
+    .wa-modal-content {
+      width: 90vw;
+      padding: 20px;
+
+      .modal-header h3 {
+        font-size: 16px;
+      }
+
+      .modal-body {
+        .wa-connected-state h4 {
+          font-size: 16px;
+        }
+        .wa-connected-state p,
+        .wa-qr-state .instruction {
+          font-size: 13px;
+        }
+      }
+    }
+  }
+}
+
+// Mobile Viewports (<= 480px)
+@media (max-width: 480px) {
+  .top-navbar {
+    height: auto;
+    min-height: 86px;
+    padding: 8px 12px 0;
+    flex-wrap: wrap;
+
+    .navbar-brand {
+      order: 1;
+      gap: 6px;
+      .brand-icon {
+        width: 18px;
+        height: 18px;
+      }
+      .brand-name {
+        font-size: 15px;
+      }
+    }
+
+    .navbar-actions {
+      order: 2;
+      gap: 8px;
+
+      .wa-status-pill {
+        padding: 4px 8px;
+        font-size: 11px;
+        gap: 5px;
+
+        .pulse-dot {
+          width: 6px;
+          height: 6px;
+        }
+      }
+
+      .theme-toggle-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+      }
+
+      .auth-profile-wrapper {
+        .user-profile {
+          gap: 6px;
+
+          .user-avatar {
+            width: 30px;
+            height: 30px;
+          }
+
+          .logout-btn {
+            padding: 4px;
+          }
+        }
+      }
+    }
+
+    // Row 2: Clean horizontal pills for small mobile devices
+    .navbar-services {
+      display: flex;
+      justify-content: center;
+      order: 3;
+      width: 100%;
+      height: 38px;
+      margin-top: 6px;
+      border-top: 1px solid var(--border-color);
+      overflow-x: auto;
+      gap: 2px;
+      -webkit-overflow-scrolling: touch;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+      .service-tab {
+        padding: 0 10px;
+        font-size: 12px;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+    }
+  }
+
+  .modal-overlay {
+    padding: 12px;
+
+    .wa-modal-content {
+      width: 100%;
+      padding: 16px;
+      border-radius: 12px;
+
+      .modal-body {
+        .wa-qr-state .qr-container {
+          padding: 10px;
+        }
+      }
+    }
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }
