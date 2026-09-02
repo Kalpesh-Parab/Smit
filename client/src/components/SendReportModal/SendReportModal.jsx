@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import api from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
-import { X, Send, Loader2, Calendar, FileText } from 'lucide-react';
+import { X, Send, Loader2, Calendar, FileText, User } from 'lucide-react';
 import './SendReportModal.scss';
 
 export default function SendReportModal({
@@ -12,7 +12,7 @@ export default function SendReportModal({
   filterParams = {},
   periodLabel = '',
 }) {
-  const { googleContacts } = useAuth();
+  const { googleContacts = [] } = useAuth();
   const [recipient, setRecipient] = useState('');
   const [phone, setPhone] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -20,21 +20,27 @@ export default function SendReportModal({
   if (!isOpen) return null;
 
   const handleContactSelect = (e) => {
-    const val = e.target.value;
-    setRecipient(val);
+    const enteredValue = e.target.value;
+    setRecipient(enteredValue);
 
+    // Clean match against name or phone number
     const match = googleContacts.find(
-      (c) => c.name.toLowerCase() === val.toLowerCase(),
+      (c) =>
+        c.name?.trim().toLowerCase() === enteredValue.trim().toLowerCase() ||
+        c.phone?.replace(/\D/g, '') === enteredValue.replace(/\D/g, ''),
     );
+
     if (match && match.phone) {
+      // Auto-populate sanitized phone digits
       setPhone(match.phone.replace(/\s+/g, ''));
     }
   };
 
   const handleSend = async (e) => {
     e.preventDefault();
-    if (!phone.trim()) {
-      toast.error('Please specify a recipient WhatsApp number');
+    const cleanPhone = phone.replace(/\D/g, '');
+    if (!cleanPhone || cleanPhone.length < 10) {
+      toast.error('Please enter a valid 10-digit WhatsApp phone number');
       return;
     }
 
@@ -86,17 +92,21 @@ export default function SendReportModal({
 
         <form onSubmit={handleSend} className='modal-form'>
           <div className='form-group'>
-            <label>Select Owner / Recipient Contact</label>
+            <label>
+              Select Owner / Recipient Contact ({googleContacts.length}{' '}
+              Available)
+            </label>
             <input
-              list='contacts-list'
+              list='modal-google-contacts-list'
               type='text'
               placeholder='Search by name from Google Contacts...'
               value={recipient}
               onChange={handleContactSelect}
+              autoComplete='off'
             />
-            <datalist id='contacts-list'>
+            <datalist id='modal-google-contacts-list'>
               {googleContacts.map((c, i) => (
-                <option key={i} value={c.name}>
+                <option key={`${c.name}-${i}`} value={c.name}>
                   {c.phone}
                 </option>
               ))}
