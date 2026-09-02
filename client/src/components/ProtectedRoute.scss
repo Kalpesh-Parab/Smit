@@ -10,6 +10,8 @@
   background-color: var(--bg-primary);
   color: var(--text-primary);
   gap: to-vh(16);
+  padding: 16px;
+  box-sizing: border-box;
 
   .spinner {
     animation: spin 1s linear infinite;
@@ -18,6 +20,7 @@
 
   .lock-card {
     width: to-vw(420);
+    max-width: 100%;
     background-color: var(--bg-surface);
     border: to-vh(1) solid var(--border-color);
     border-radius: to-vw(16);
@@ -27,6 +30,7 @@
     align-items: center;
     text-align: center;
     box-shadow: 0 to-vh(16) to-vw(36) rgba(0, 0, 0, 0.08);
+    box-sizing: border-box;
 
     .lock-icon {
       width: to-vw(60);
@@ -44,6 +48,7 @@
       font-size: to-vw(20);
       font-weight: 700;
       margin-bottom: to-vh(8);
+      color: var(--text-primary);
     }
 
     p {
@@ -56,6 +61,7 @@
     .login-action-btn {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: to-vw(10);
       background-color: var(--accent-primary);
       color: #ffffff;
@@ -64,10 +70,106 @@
       font-size: to-vw(14);
       font-weight: 600;
       transition: background-color 0.2s ease;
+      cursor: pointer;
+      border: none;
 
       &:hover {
         background-color: var(--accent-hover);
       }
     }
+  }
+}
+
+// Tablet Viewports (<= 768px)
+@media (max-width: 768px) {
+  .auth-lock-screen {
+    height: 100dvh;
+    padding: 20px;
+    gap: 14px;
+
+    .lock-card {
+      width: 380px;
+      padding: 28px 24px;
+      border-radius: 14px;
+
+      .lock-icon {
+        width: 52px;
+        height: 52px;
+        margin-bottom: 14px;
+
+        svg {
+          width: 24px;
+          height: 24px;
+        }
+      }
+
+      h2 {
+        font-size: 18px;
+        margin-bottom: 6px;
+      }
+
+      p {
+        font-size: 13px;
+        margin-bottom: 20px;
+      }
+
+      .login-action-btn {
+        padding: 10px 20px;
+        font-size: 13px;
+        border-radius: 7px;
+        gap: 8px;
+      }
+    }
+  }
+}
+
+// Mobile Viewports (<= 480px)
+@media (max-width: 480px) {
+  .auth-lock-screen {
+    height: 100dvh;
+    padding: 16px;
+
+    .lock-card {
+      width: 100%;
+      padding: 24px 18px;
+      border-radius: 12px;
+
+      .lock-icon {
+        width: 46px;
+        height: 46px;
+        margin-bottom: 12px;
+
+        svg {
+          width: 20px;
+          height: 20px;
+        }
+      }
+
+      h2 {
+        font-size: 17px;
+        margin-bottom: 6px;
+      }
+
+      p {
+        font-size: 12px;
+        margin-bottom: 18px;
+      }
+
+      .login-action-btn {
+        width: 100%; // Spans full card width for easy thumb tapping
+        padding: 12px 16px;
+        font-size: 14px;
+        border-radius: 8px;
+      }
+    }
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }
