@@ -5,17 +5,19 @@ import { toast } from 'sonner';
 import './ProtectedRoute.scss';
 
 export default function ProtectedRoute({ children }) {
-  const { user, loading, setTokenAndFetchContacts } = useAuth();
+  const { user, loading, loginWithBackend } = useAuth();
 
   const handleLogin = useGoogleLogin({
-    scope: 'email profile https://www.googleapis.com/auth/contacts.readonly',
-    onSuccess: async (tokenResponse) => {
+    flow: 'auth-code',
+    scope:
+      'openid email profile https://www.googleapis.com/auth/contacts.readonly',
+    onSuccess: async (codeResponse) => {
       try {
-        await setTokenAndFetchContacts(tokenResponse.access_token);
-        toast.success('Logged in successfully!');
+        await loginWithBackend(codeResponse.code);
+        toast.success('Logged in successfully! 30-day session active.');
       } catch (err) {
         console.error(err);
-        toast.error('Failed to authenticate');
+        toast.error('Authentication failed on server');
       }
     },
     onError: (err) => {
@@ -28,7 +30,7 @@ export default function ProtectedRoute({ children }) {
     return (
       <div className='auth-lock-screen'>
         <Loader2 className='spinner' size={40} />
-        <p>Verifying access...</p>
+        <p>Verifying 30-day session...</p>
       </div>
     );
   }
