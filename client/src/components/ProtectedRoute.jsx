@@ -8,7 +8,6 @@ export default function ProtectedRoute({ children }) {
   const { user, loading, setTokenAndFetchContacts } = useAuth();
 
   const handleLogin = useGoogleLogin({
-    flow: 'implicit',
     scope: 'email profile https://www.googleapis.com/auth/contacts.readonly',
     onSuccess: async (tokenResponse) => {
       try {
