@@ -8,22 +8,27 @@ export default function ProtectedRoute({ children }) {
   const { user, loading, setTokenAndFetchContacts } = useAuth();
 
   const handleLogin = useGoogleLogin({
-    scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/contacts.readonly',
+    flow: 'implicit',
+    scope: 'email profile https://www.googleapis.com/auth/contacts.readonly',
     onSuccess: async (tokenResponse) => {
       try {
         await setTokenAndFetchContacts(tokenResponse.access_token);
         toast.success('Logged in successfully!');
-      } catch {
+      } catch (err) {
+        console.error(err);
         toast.error('Failed to authenticate');
       }
     },
-    onError: () => toast.error('Google Sign In failed'),
+    onError: (err) => {
+      console.error('Google Auth Error:', err);
+      toast.error('Google Sign In failed');
+    },
   });
 
   if (loading) {
     return (
-      <div className="auth-lock-screen">
-        <Loader2 className="spinner" size={40} />
+      <div className='auth-lock-screen'>
+        <Loader2 className='spinner' size={40} />
         <p>Verifying access...</p>
       </div>
     );
@@ -31,14 +36,21 @@ export default function ProtectedRoute({ children }) {
 
   if (!user) {
     return (
-      <div className="auth-lock-screen">
-        <div className="lock-card">
-          <div className="lock-icon">
+      <div className='auth-lock-screen'>
+        <div className='lock-card'>
+          <div className='lock-icon'>
             <ShieldCheck size={36} />
           </div>
           <h2>Smit Office Workspace</h2>
-          <p>Please authenticate with your authorized Google Account to access dashboard operations.</p>
-          <button onClick={() => handleLogin()} className="login-action-btn">
+          <p>
+            Please authenticate with your authorized Google Account to access
+            dashboard operations.
+          </p>
+          <button
+            onClick={() => handleLogin()}
+            className='login-action-btn'
+            type='button'
+          >
             <LogIn size={18} />
             <span>Sign in with Google</span>
           </button>
