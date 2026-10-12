@@ -9,6 +9,7 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import InvoiceGenerator from './pages/InvoiceGenerator';
 import Categories from './pages/Categories';
+import { Toaster } from 'react-hot-toast';
 
 // Quick Protected Route component
 function ProtectedRoute({ children }) {
@@ -22,6 +23,7 @@ function ProtectedRoute({ children }) {
 export default function App() {
   return (
     <BrowserRouter>
+        <Toaster position="top-right"/>
       <Routes>
         {/* Public Route */}
         <Route path='/login' element={<Login />} />

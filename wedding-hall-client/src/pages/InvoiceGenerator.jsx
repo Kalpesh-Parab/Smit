@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import api from '../services/api';
-import { Plus, Trash2, Printer, Save } from 'lucide-react';
+import { Plus, Trash2, Printer, Save, ArrowLeft } from 'lucide-react';
 import InvoicePrintView from '../components/invoices/InvoicePrintView';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useSearchParams, useNavigate, Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 export default function InvoiceGenerator() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const editId = searchParams.get('edit');
+
   const [categories, setCategories] = useState([]);
   const [customer, setCustomer] = useState({ name: '', phone: '' });
   const [eventDetails, setEventDetails] = useState({
@@ -19,7 +21,6 @@ export default function InvoiceGenerator() {
   const [items, setItems] = useState([]);
   const [advancePaid, setAdvancePaid] = useState(0);
 
-  // Direct internal costing
   const [internalCosting, setInternalCosting] = useState({
     cateringExpense: 0,
     hallMaintenance: 0,
@@ -29,65 +30,95 @@ export default function InvoiceGenerator() {
   const [savedInvoice, setSavedInvoice] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Fetch categories to populate selectors
   useEffect(() => {
     const loadCategories = async () => {
       try {
         const res = await api.get('/hall-categories');
-        const catList = res.data.data || [];
+        const catList = res.data?.data || [];
         setCategories(catList);
 
-        // Prepopulate standard defaults if empty
-        if (catList.length > 0 && items.length === 0) {
+        if (!editId && catList.length > 0 && items.length === 0) {
           const defaultItems = catList.slice(0, 4).map((c) => ({
             categoryId: c._id,
             name: c.name,
             billingType: c.billingType,
-            rate: c.defaultRate,
+            rate: c.defaultRate || 0,
             quantity: 1,
-            total: c.defaultRate * 1,
+            total: (c.defaultRate || 0) * 1,
           }));
           setItems(defaultItems);
         }
       } catch (err) {
         console.error('Error fetching categories:', err);
+        toast.error('Failed to load item categories');
       }
     };
     loadCategories();
-  }, []);
+  }, [editId]);
 
   useEffect(() => {
-    if (editId) {
-      api.get(`/hall-invoices/${editId}`).then((res) => {
-        const inv = res.data.data;
+    if (!editId) return;
+
+    const loadInvoice = async () => {
+      try {
+        const res = await api.get(`/hall-invoices/${editId}`);
+        const inv = res.data?.data;
         if (inv) {
-          setCustomer(inv.customer);
+          setCustomer(inv.customer || { name: '', phone: '' });
           setEventDetails({
-            programName: inv.eventDetails.programName,
-            date: new Date(inv.eventDetails.date).toISOString().split('T')[0],
-            timeSlot: inv.eventDetails.timeSlot,
+            programName: inv.eventDetails?.programName || '',
+            date: inv.eventDetails?.date
+              ? new Date(inv.eventDetails.date).toISOString().split('T')[0]
+              : new Date().toISOString().split('T')[0],
+            timeSlot: inv.eventDetails?.timeSlot || '',
           });
-          setItems(inv.items);
-          setAdvancePaid(inv.billing.advancePaid);
-          setInternalCosting(inv.internalCosting);
+          setItems(inv.items || []);
+          setAdvancePaid(inv.billing?.advancePaid || 0);
+          setInternalCosting(
+            inv.internalCosting || {
+              cateringExpense: 0,
+              hallMaintenance: 0,
+              workerSalary: 0,
+            },
+          );
+          setSavedInvoice(inv);
         }
-      });
-    }
+      } catch (err) {
+        console.error('Error loading invoice:', err);
+        toast.error('Failed to load invoice for editing');
+      }
+    };
+
+    loadInvoice();
   }, [editId]);
 
   const handleAddItemFromCategory = (catId) => {
     const selected = categories.find((c) => c._id === catId);
     if (!selected) return;
 
-    setItems([
-      ...items,
+    setItems((prev) => [
+      ...prev,
       {
         categoryId: selected._id,
         name: selected.name,
         billingType: selected.billingType,
-        rate: selected.defaultRate,
+        rate: selected.defaultRate || 0,
         quantity: 1,
-        total: selected.defaultRate * 1,
+        total: (selected.defaultRate || 0) * 1,
+      },
+    ]);
+  };
+
+  const handleAddNewCustomItem = () => {
+    setItems((prev) => [
+      ...prev,
+      {
+        categoryId: null,
+        name: '',
+        billingType: 'FIXED',
+        rate: 0,
+        quantity: 1,
+        total: 0,
       },
     ]);
   };
@@ -105,7 +136,6 @@ export default function InvoiceGenerator() {
     setItems(items.filter((_, i) => i !== index));
   };
 
-  // Financial calculations
   const subTotal = items.reduce(
     (sum, item) => sum + (Number(item.total) || 0),
     0,
@@ -119,12 +149,13 @@ export default function InvoiceGenerator() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!customer.name || !customer.phone) {
-      alert('Please fill customer details');
+
+    if (!customer.name.trim() || !customer.phone.trim()) {
+      toast.error('Please enter customer name and phone');
       return;
     }
     if (items.length === 0) {
-      alert('Please add at least one line item');
+      toast.error('Please add at least one line item');
       return;
     }
 
@@ -136,62 +167,71 @@ export default function InvoiceGenerator() {
         items,
         billing: {
           subTotal,
-          advancePaid: Number(advancePaid),
+          advancePaid: Number(advancePaid) || 0,
           balanceDue,
         },
         internalCosting: {
-          ...internalCosting,
+          cateringExpense: Number(internalCosting.cateringExpense) || 0,
+          hallMaintenance: Number(internalCosting.hallMaintenance) || 0,
+          workerSalary: Number(internalCosting.workerSalary) || 0,
           netProfit,
         },
       };
 
-      const res = await api.post('/hall-invoices', payload);
-      setSavedInvoice(res.data.data);
-      alert('Invoice created successfully!');
+      if (editId) {
+        const res = await api.put(`/hall-invoices/${editId}`, payload);
+        setSavedInvoice(res.data?.data);
+        toast.success('Invoice updated successfully!');
+      } else {
+        const res = await api.post('/hall-invoices', payload);
+        setSavedInvoice(res.data?.data);
+        toast.success('Invoice created successfully!');
+      }
+
+      navigate('/dashboard');
     } catch (err) {
-      alert(
-        'Error creating invoice: ' +
-          (err.response?.data?.message || err.message),
+      console.error(err);
+      toast.error(
+        err.response?.data?.message || err.message || 'Failed to save invoice',
       );
     } finally {
       setIsSubmitting(false);
     }
-    if (editId) {
-      await api.put(`/hall-invoices/${editId}`, payload);
-      alert('Invoice updated successfully!');
-    } else {
-      const res = await api.post('/hall-invoices', payload);
-      setSavedInvoice(res.data.data);
-      alert('Invoice created successfully!');
-    }
-    navigate('/dashboard');
   };
 
   return (
     <div className='space-y-6'>
-      {/* Action Header */}
       <div className='flex items-center justify-between no-print'>
-        <div>
-          <h2 className='text-2xl font-bold text-slate-800'>
-            Generate Wedding Hall Invoice
-          </h2>
-          <p className='text-slate-500 text-sm'>
-            Bill catering, servers, decor, and calculate net margin.
-          </p>
+        <div className='flex items-center gap-3'>
+          <Link
+            to='/dashboard'
+            className='p-2 hover:bg-slate-100 rounded-lg text-slate-600 transition'
+          >
+            <ArrowLeft size={20} />
+          </Link>
+          <div>
+            <h2 className='text-2xl font-bold text-slate-800'>
+              {editId
+                ? 'Edit Wedding Hall Invoice'
+                : 'Generate Wedding Hall Invoice'}
+            </h2>
+            <p className='text-slate-500 text-sm'>
+              Bill catering, servers, decor, and calculate net margin.
+            </p>
+          </div>
         </div>
+
         {savedInvoice && (
           <button
             onClick={() => window.print()}
-            className='inline-flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition'
+            className='inline-flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition text-sm'
           >
-            <Printer size={16} /> Print / Save PDF
+            <Printer size={16} /> Print
           </button>
         )}
       </div>
 
-      {/* Main Billing Form */}
       <form onSubmit={handleSubmit} className='space-y-6 no-print'>
-        {/* Customer & Event Details */}
         <div className='bg-white p-5 rounded-xl border border-slate-200 shadow-sm grid grid-cols-1 md:grid-cols-3 gap-4'>
           <div>
             <label className='block text-xs font-semibold text-slate-600 mb-1'>
@@ -275,28 +315,37 @@ export default function InvoiceGenerator() {
           </div>
         </div>
 
-        {/* Dynamic Billing Items */}
         <div className='bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4'>
-          <div className='flex items-center justify-between'>
+          <div className='flex items-center justify-between flex-wrap gap-2'>
             <h3 className='font-semibold text-slate-800'>
               Billed Services & Items
             </h3>
-            {categories.length > 0 && (
-              <select
-                onChange={(e) => {
-                  if (e.target.value) handleAddItemFromCategory(e.target.value);
-                  e.target.value = '';
-                }}
-                className='px-3 py-1.5 border border-amber-300 text-amber-900 bg-amber-50 rounded-lg text-xs font-semibold focus:outline-none'
+            <div className='flex items-center gap-2'>
+              {categories.length > 0 && (
+                <select
+                  onChange={(e) => {
+                    if (e.target.value)
+                      handleAddItemFromCategory(e.target.value);
+                    e.target.value = '';
+                  }}
+                  className='px-3 py-1.5 border border-amber-300 text-amber-900 bg-amber-50 rounded-lg text-xs font-semibold focus:outline-none'
+                >
+                  <option value=''>+ Add Item from Master</option>
+                  {categories.map((c) => (
+                    <option key={c._id} value={c._id}>
+                      {c.name} (₹{c.defaultRate})
+                    </option>
+                  ))}
+                </select>
+              )}
+              <button
+                type='button'
+                onClick={handleAddNewCustomItem}
+                className='px-3 py-1.5 border border-slate-300 text-slate-700 bg-slate-50 hover:bg-slate-100 rounded-lg text-xs font-semibold flex items-center gap-1 transition'
               >
-                <option value=''>+ Add Item from Master</option>
-                {categories.map((c) => (
-                  <option key={c._id} value={c._id}>
-                    {c.name} (₹{c.defaultRate})
-                  </option>
-                ))}
-              </select>
-            )}
+                <Plus size={14} /> Custom Item
+              </button>
+            </div>
           </div>
 
           <table className='min-w-full divide-y divide-slate-200 text-sm'>
@@ -362,9 +411,7 @@ export default function InvoiceGenerator() {
           </table>
         </div>
 
-        {/* Financial Summary & Direct Costs */}
         <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-          {/* Internal Direct Costing */}
           <div className='bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-3'>
             <h3 className='font-semibold text-slate-800 text-sm'>
               Direct Event Expenses (Internal)
@@ -425,14 +472,15 @@ export default function InvoiceGenerator() {
             <div className='pt-2 flex justify-between items-center text-xs text-slate-600 font-medium'>
               <span>Estimated Net Margin:</span>
               <span
-                className={`text-sm font-bold ${netProfit >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}
+                className={`text-sm font-bold ${
+                  netProfit >= 0 ? 'text-emerald-600' : 'text-rose-600'
+                }`}
               >
                 ₹ {netProfit.toLocaleString('en-IN')}
               </span>
             </div>
           </div>
 
-          {/* Customer Total & Balance */}
           <div className='bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-3'>
             <div className='flex justify-between items-center text-sm font-medium'>
               <span className='text-slate-600'>Subtotal (Total Bill):</span>
@@ -466,12 +514,15 @@ export default function InvoiceGenerator() {
           disabled={isSubmitting}
           className='w-full py-3 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl transition flex items-center justify-center gap-2'
         >
-          <Save size={18} />{' '}
-          {isSubmitting ? 'Saving Invoice...' : 'Generate & Save Invoice'}
+          <Save size={18} />
+          {isSubmitting
+            ? 'Saving Invoice...'
+            : editId
+              ? 'Update Invoice'
+              : 'Generate & Save Invoice'}
         </button>
       </form>
 
-      {/* Printable Invoice Component */}
       {savedInvoice && (
         <div className='mt-8'>
           <InvoicePrintView invoice={savedInvoice} />
