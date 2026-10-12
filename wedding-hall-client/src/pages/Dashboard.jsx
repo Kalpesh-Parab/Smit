@@ -292,7 +292,7 @@ export default function Dashboard() {
                       <Link
                         title='Edit Invoice'
                         to={`/invoices/new?edit=${inv._id}`}
-                        className='p-1.5 inline-block text-amber-600 hover:text-amber-800 hover:bg-amber-50 rounded-md transition'
+                        className='inline-block text-amber-600 hover:text-amber-800 hover:bg-amber-50 rounded-md transition'
                       >
                         <Edit size={16} />
                       </Link>
