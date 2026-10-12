@@ -2,8 +2,12 @@ import React, { useState, useEffect } from 'react';
 import api from '../services/api';
 import { Plus, Trash2, Printer, Save } from 'lucide-react';
 import InvoicePrintView from '../components/invoices/InvoicePrintView';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 
 export default function InvoiceGenerator() {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const editId = searchParams.get('edit');
   const [categories, setCategories] = useState([]);
   const [customer, setCustomer] = useState({ name: '', phone: '' });
   const [eventDetails, setEventDetails] = useState({
@@ -51,6 +55,25 @@ export default function InvoiceGenerator() {
     };
     loadCategories();
   }, []);
+
+  useEffect(() => {
+    if (editId) {
+      api.get(`/hall-invoices/${editId}`).then((res) => {
+        const inv = res.data.data;
+        if (inv) {
+          setCustomer(inv.customer);
+          setEventDetails({
+            programName: inv.eventDetails.programName,
+            date: new Date(inv.eventDetails.date).toISOString().split('T')[0],
+            timeSlot: inv.eventDetails.timeSlot,
+          });
+          setItems(inv.items);
+          setAdvancePaid(inv.billing.advancePaid);
+          setInternalCosting(inv.internalCosting);
+        }
+      });
+    }
+  }, [editId]);
 
   const handleAddItemFromCategory = (catId) => {
     const selected = categories.find((c) => c._id === catId);
@@ -133,6 +156,15 @@ export default function InvoiceGenerator() {
     } finally {
       setIsSubmitting(false);
     }
+    if (editId) {
+      await api.put(`/hall-invoices/${editId}`, payload);
+      alert('Invoice updated successfully!');
+    } else {
+      const res = await api.post('/hall-invoices', payload);
+      setSavedInvoice(res.data.data);
+      alert('Invoice created successfully!');
+    }
+    navigate('/dashboard');
   };
 
   return (
