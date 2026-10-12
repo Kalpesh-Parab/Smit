@@ -16,6 +16,8 @@ import towingVanRoutes from './routes/towingVan.routes.js';
 import expenseRoutes from './routes/expense.routes.js';
 import analyticsRoutes from './routes/analytics.routes.js';
 import contactsRoutes from './routes/contacts.routes.js';
+import hallCategoryRoutes from './routes/hallCategory.routes.js';
+import hallInvoiceRoutes from './routes/hallInvoice.routes.js';
 
 // WhatsApp Baileys Service
 import { connectToWhatsApp } from './services/whatsapp/baileys.service.js';
@@ -72,6 +74,10 @@ app.use('/api/towing-vans', towingVanRoutes);
 app.use('/api/expenses', expenseRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/contacts', contactsRoutes);
+
+// Wedding Hall Management Routes
+app.use('/api/hall-categories', hallCategoryRoutes);
+app.use('/api/hall-invoices', hallInvoiceRoutes);
 
 const PORT = process.env.PORT || 5000;
 

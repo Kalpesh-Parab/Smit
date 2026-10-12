@@ -18,3 +18,8 @@ client/dist/
 dist/
 .DS_Store
 *.log
+
+# Wedding hall client
+wedding-hall-client/node_modules/
+wedding-hall-client/.env
+wedding-hall-client/dist/
