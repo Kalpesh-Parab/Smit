@@ -16,9 +16,9 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const res = await api.post('/auth/login', { email, password });
-      const token =
-        res.data.token || res.data.accessToken || 'authenticated_session';
+      // Inside handleLogin in Login.jsx:
+      const res = await api.post('/hall-auth/login', { email, password });
+      const token = res.data.token || res.data.accessToken;
       localStorage.setItem('hall_token', token);
       navigate('/dashboard');
     } catch (err) {

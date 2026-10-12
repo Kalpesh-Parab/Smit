@@ -18,6 +18,7 @@ import analyticsRoutes from './routes/analytics.routes.js';
 import contactsRoutes from './routes/contacts.routes.js';
 import hallCategoryRoutes from './routes/hallCategory.routes.js';
 import hallInvoiceRoutes from './routes/hallInvoice.routes.js';
+import hallAdminRoutes from './routes/hallAdmin.routes.js';
 
 // WhatsApp Baileys Service
 import { connectToWhatsApp } from './services/whatsapp/baileys.service.js';
@@ -79,6 +80,7 @@ app.use('/api/contacts', contactsRoutes);
 // Wedding Hall Management Routes
 app.use('/api/hall-categories', hallCategoryRoutes);
 app.use('/api/hall-invoices', hallInvoiceRoutes);
+app.use('/api/hall-auth', hallAdminRoutes);
 
 const PORT = process.env.PORT || 5000;
 
