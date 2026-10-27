@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../services/api';
-import { Plus, Trash2, Printer, Save, ArrowLeft } from 'lucide-react';
+import { Plus, Trash2, Printer, Save, ArrowLeft, Layers, User, Calendar, CreditCard, Banknote } from 'lucide-react';
 import InvoicePrintView from '../components/invoices/InvoicePrintView';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
@@ -200,23 +200,22 @@ export default function InvoiceGenerator() {
   };
 
   return (
-    <div className='space-y-6'>
-      <div className='flex items-center justify-between no-print'>
-        <div className='flex items-center gap-3'>
+    <div className='space-y-5 px-3 sm:px-6 py-4 max-w-7xl mx-auto'>
+      {/* Top Bar */}
+      <div className='flex items-center justify-between no-print gap-2'>
+        <div className='flex items-center gap-2 sm:gap-3'>
           <Link
             to='/dashboard'
-            className='p-2 hover:bg-slate-100 rounded-lg text-slate-600 transition'
+            className='p-2 hover:bg-slate-100 rounded-xl text-slate-600 transition active:scale-95'
           >
             <ArrowLeft size={20} />
           </Link>
           <div>
-            <h2 className='text-2xl font-bold text-slate-800'>
-              {editId
-                ? 'Edit Wedding Hall Invoice'
-                : 'Generate Wedding Hall Invoice'}
+            <h2 className='text-lg sm:text-2xl font-bold text-slate-900'>
+              {editId ? 'Edit Invoice' : 'New Invoice'}
             </h2>
-            <p className='text-slate-500 text-sm'>
-              Bill catering, servers, decor, and calculate net margin.
+            <p className='text-slate-500 text-xs hidden sm:block'>
+              Manage catering, servers, halls, and profit metrics
             </p>
           </div>
         </div>
@@ -224,113 +223,120 @@ export default function InvoiceGenerator() {
         {savedInvoice && (
           <button
             onClick={() => window.print()}
-            className='inline-flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition text-sm'
+            className='inline-flex items-center gap-1.5 px-3 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition text-xs sm:text-sm font-medium'
           >
             <Printer size={16} /> Print
           </button>
         )}
       </div>
 
-      <form onSubmit={handleSubmit} className='space-y-6 no-print'>
-        <div className='bg-white p-5 rounded-xl border border-slate-200 shadow-sm grid grid-cols-1 md:grid-cols-3 gap-4'>
-          <div>
-            <label className='block text-xs font-semibold text-slate-600 mb-1'>
-              Customer Name
-            </label>
-            <input
-              type='text'
-              required
-              placeholder='e.g. Vishal Patil'
-              value={customer.name}
-              onChange={(e) =>
-                setCustomer({ ...customer, name: e.target.value })
-              }
-              className='w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none'
-            />
-          </div>
+      <form onSubmit={handleSubmit} className='space-y-5 no-print'>
+        {/* Customer & Event Details */}
+        <div className='bg-white p-4 sm:p-5 rounded-xl border border-slate-200/80 shadow-xs space-y-4'>
+          <h3 className='font-semibold text-slate-800 text-sm flex items-center gap-2 border-b border-slate-100 pb-2.5'>
+            <User size={16} className='text-amber-600' /> Client & Event Information
+          </h3>
 
-          <div>
-            <label className='block text-xs font-semibold text-slate-600 mb-1'>
-              Customer Phone (WhatsApp)
-            </label>
-            <input
-              type='tel'
-              required
-              placeholder='e.g. 9876543210'
-              value={customer.phone}
-              onChange={(e) =>
-                setCustomer({ ...customer, phone: e.target.value })
-              }
-              className='w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none'
-            />
-          </div>
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4'>
+            <div>
+              <label className='block text-xs font-semibold text-slate-700 mb-1.5'>
+                Customer Name <span className='text-rose-500'>*</span>
+              </label>
+              <input
+                type='text'
+                required
+                placeholder='e.g. Vishal Patil'
+                value={customer.name}
+                onChange={(e) =>
+                  setCustomer({ ...customer, name: e.target.value })
+                }
+                className='w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none transition'
+              />
+            </div>
 
-          <div>
-            <label className='block text-xs font-semibold text-slate-600 mb-1'>
-              Program / Event Name
-            </label>
-            <input
-              type='text'
-              required
-              placeholder='e.g. Wedding & Reception'
-              value={eventDetails.programName}
-              onChange={(e) =>
-                setEventDetails({
-                  ...eventDetails,
-                  programName: e.target.value,
-                })
-              }
-              className='w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none'
-            />
-          </div>
+            <div>
+              <label className='block text-xs font-semibold text-slate-700 mb-1.5'>
+                Phone / WhatsApp <span className='text-rose-500'>*</span>
+              </label>
+              <input
+                type='tel'
+                required
+                placeholder='e.g. 9876543210'
+                value={customer.phone}
+                onChange={(e) =>
+                  setCustomer({ ...customer, phone: e.target.value })
+                }
+                className='w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none transition'
+              />
+            </div>
 
-          <div>
-            <label className='block text-xs font-semibold text-slate-600 mb-1'>
-              Event Date
-            </label>
-            <input
-              type='date'
-              required
-              value={eventDetails.date}
-              onChange={(e) =>
-                setEventDetails({ ...eventDetails, date: e.target.value })
-              }
-              className='w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none'
-            />
-          </div>
+            <div>
+              <label className='block text-xs font-semibold text-slate-700 mb-1.5'>
+                Program / Event Name
+              </label>
+              <input
+                type='text'
+                required
+                placeholder='e.g. Wedding & Reception'
+                value={eventDetails.programName}
+                onChange={(e) =>
+                  setEventDetails({
+                    ...eventDetails,
+                    programName: e.target.value,
+                  })
+                }
+                className='w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none transition'
+              />
+            </div>
 
-          <div>
-            <label className='block text-xs font-semibold text-slate-600 mb-1'>
-              Timing Slot
-            </label>
-            <input
-              type='text'
-              placeholder='e.g. 7:00 AM to 4:30 PM'
-              value={eventDetails.timeSlot}
-              onChange={(e) =>
-                setEventDetails({ ...eventDetails, timeSlot: e.target.value })
-              }
-              className='w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none'
-            />
+            <div>
+              <label className='block text-xs font-semibold text-slate-700 mb-1.5'>
+                Event Date
+              </label>
+              <input
+                type='date'
+                required
+                value={eventDetails.date}
+                onChange={(e) =>
+                  setEventDetails({ ...eventDetails, date: e.target.value })
+                }
+                className='w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none transition'
+              />
+            </div>
+
+            <div className='sm:col-span-2 lg:col-span-1'>
+              <label className='block text-xs font-semibold text-slate-700 mb-1.5'>
+                Timing Slot
+              </label>
+              <input
+                type='text'
+                placeholder='e.g. 7:00 AM to 4:30 PM'
+                value={eventDetails.timeSlot}
+                onChange={(e) =>
+                  setEventDetails({ ...eventDetails, timeSlot: e.target.value })
+                }
+                className='w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none transition'
+              />
+            </div>
           </div>
         </div>
 
-        <div className='bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4'>
-          <div className='flex items-center justify-between flex-wrap gap-2'>
-            <h3 className='font-semibold text-slate-800'>
-              Billed Services & Items
+        {/* Billed Items Section */}
+        <div className='bg-white p-4 sm:p-5 rounded-xl border border-slate-200/80 shadow-xs space-y-4'>
+          <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3'>
+            <h3 className='font-semibold text-slate-800 text-sm flex items-center gap-2'>
+              <Layers size={16} className='text-amber-600' /> Billed Services & Items ({items.length})
             </h3>
-            <div className='flex items-center gap-2'>
+            <div className='flex flex-wrap items-center gap-2'>
               {categories.length > 0 && (
                 <select
                   onChange={(e) => {
-                    if (e.target.value)
-                      handleAddItemFromCategory(e.target.value);
+                    if (e.target.value) handleAddItemFromCategory(e.target.value);
                     e.target.value = '';
                   }}
-                  className='px-3 py-1.5 border border-amber-300 text-amber-900 bg-amber-50 rounded-lg text-xs font-semibold focus:outline-none'
+                  className='flex-1 sm:flex-none px-3 py-2 border border-amber-300 text-amber-900 bg-amber-50 rounded-lg text-xs font-semibold focus:outline-none cursor-pointer'
                 >
-                  <option value=''>+ Add Item from Master</option>
+                  <option value=''>+ Add Preset Item</option>
                   {categories.map((c) => (
                     <option key={c._id} value={c._id}>
                       {c.name} (₹{c.defaultRate})
@@ -341,37 +347,49 @@ export default function InvoiceGenerator() {
               <button
                 type='button'
                 onClick={handleAddNewCustomItem}
-                className='px-3 py-1.5 border border-slate-300 text-slate-700 bg-slate-50 hover:bg-slate-100 rounded-lg text-xs font-semibold flex items-center gap-1 transition'
+                className='flex-1 sm:flex-none px-3 py-2 border border-slate-300 text-slate-700 bg-slate-50 hover:bg-slate-100 active:scale-95 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition'
               >
                 <Plus size={14} /> Custom Item
               </button>
             </div>
           </div>
 
-          <table className='min-w-full divide-y divide-slate-200 text-sm'>
-            <thead>
-              <tr className='text-left text-xs font-semibold text-slate-500'>
-                <th className='py-2'>Item Name</th>
-                <th className='py-2 w-28'>Rate (₹)</th>
-                <th className='py-2 w-28'>Qty / Count</th>
-                <th className='py-2 w-32 text-right'>Total (₹)</th>
-                <th className='py-2 w-10'></th>
-              </tr>
-            </thead>
-            <tbody className='divide-y divide-slate-100'>
-              {items.map((item, index) => (
-                <tr key={index}>
-                  <td className='py-2 pr-2'>
+          {/* Mobile Items Stack (< 640px) */}
+          <div className='space-y-3 sm:hidden'>
+            {items.map((item, index) => (
+              <div
+                key={index}
+                className='bg-slate-50/70 p-3 rounded-lg border border-slate-200/90 space-y-2.5 relative'
+              >
+                <div className='flex items-start justify-between gap-2 pr-7'>
+                  <div className='w-full'>
+                    <label className='block text-[11px] font-semibold text-slate-500 mb-1'>
+                      Item Name
+                    </label>
                     <input
                       type='text'
                       value={item.name}
+                      placeholder='Service / Item Name'
                       onChange={(e) =>
                         handleItemChange(index, 'name', e.target.value)
                       }
-                      className='w-full px-2 py-1 border border-slate-300 rounded text-sm'
+                      className='w-full px-2.5 py-1.5 border border-slate-300 rounded-md text-sm bg-white focus:outline-none focus:ring-1 focus:ring-amber-500'
                     />
-                  </td>
-                  <td className='py-2 pr-2'>
+                  </div>
+                  <button
+                    type='button'
+                    onClick={() => handleRemoveItem(index)}
+                    className='absolute top-3 right-3 p-1.5 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded transition'
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </div>
+
+                <div className='grid grid-cols-3 gap-2 items-end pt-1'>
+                  <div>
+                    <label className='block text-[11px] font-semibold text-slate-500 mb-1'>
+                      Rate (₹)
+                    </label>
                     <input
                       type='number'
                       min='0'
@@ -379,10 +397,13 @@ export default function InvoiceGenerator() {
                       onChange={(e) =>
                         handleItemChange(index, 'rate', e.target.value)
                       }
-                      className='w-full px-2 py-1 border border-slate-300 rounded text-sm'
+                      className='w-full px-2 py-1.5 border border-slate-300 rounded-md text-sm bg-white'
                     />
-                  </td>
-                  <td className='py-2 pr-2'>
+                  </div>
+                  <div>
+                    <label className='block text-[11px] font-semibold text-slate-500 mb-1'>
+                      Qty
+                    </label>
                     <input
                       type='number'
                       min='1'
@@ -390,35 +411,101 @@ export default function InvoiceGenerator() {
                       onChange={(e) =>
                         handleItemChange(index, 'quantity', e.target.value)
                       }
-                      className='w-full px-2 py-1 border border-slate-300 rounded text-sm'
+                      className='w-full px-2 py-1.5 border border-slate-300 rounded-md text-sm bg-white text-center'
                     />
-                  </td>
-                  <td className='py-2 text-right font-medium text-slate-900'>
-                    ₹ {Number(item.total || 0).toLocaleString('en-IN')}
-                  </td>
-                  <td className='py-2 text-center'>
-                    <button
-                      type='button'
-                      onClick={() => handleRemoveItem(index)}
-                      className='text-rose-500 hover:text-rose-700'
-                    >
-                      <Trash2 size={16} />
-                    </button>
-                  </td>
+                  </div>
+                  <div className='text-right'>
+                    <span className='block text-[11px] font-semibold text-slate-500 mb-1'>
+                      Total
+                    </span>
+                    <span className='block py-1.5 text-xs font-bold text-slate-900'>
+                      ₹ {Number(item.total || 0).toLocaleString('en-IN')}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop/Tablet Table (>= 640px) */}
+          <div className='hidden sm:block overflow-x-auto'>
+            <table className='min-w-full divide-y divide-slate-200 text-sm'>
+              <thead>
+                <tr className='text-left text-xs font-semibold text-slate-500'>
+                  <th className='py-2.5'>Item / Service</th>
+                  <th className='py-2.5 w-32'>Rate (₹)</th>
+                  <th className='py-2.5 w-24 text-center'>Qty</th>
+                  <th className='py-2.5 w-32 text-right'>Total (₹)</th>
+                  <th className='py-2.5 w-12 text-center'></th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className='divide-y divide-slate-100'>
+                {items.map((item, index) => (
+                  <tr key={index}>
+                    <td className='py-2 pr-2'>
+                      <input
+                        type='text'
+                        value={item.name}
+                        placeholder='Service Name'
+                        onChange={(e) =>
+                          handleItemChange(index, 'name', e.target.value)
+                        }
+                        className='w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-sm'
+                      />
+                    </td>
+                    <td className='py-2 pr-2'>
+                      <input
+                        type='number'
+                        min='0'
+                        value={item.rate}
+                        onChange={(e) =>
+                          handleItemChange(index, 'rate', e.target.value)
+                        }
+                        className='w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-sm'
+                      />
+                    </td>
+                    <td className='py-2 pr-2'>
+                      <input
+                        type='number'
+                        min='1'
+                        value={item.quantity}
+                        onChange={(e) =>
+                          handleItemChange(index, 'quantity', e.target.value)
+                        }
+                        className='w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-sm text-center'
+                      />
+                    </td>
+                    <td className='py-2 text-right font-medium text-slate-900'>
+                      ₹ {Number(item.total || 0).toLocaleString('en-IN')}
+                    </td>
+                    <td className='py-2 text-center'>
+                      <button
+                        type='button'
+                        onClick={() => handleRemoveItem(index)}
+                        className='p-1.5 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded transition'
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
 
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-          <div className='bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-3'>
-            <h3 className='font-semibold text-slate-800 text-sm'>
-              Direct Event Expenses (Internal)
+        {/* Costing & Billing Summary */}
+        <div className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
+          {/* Internal Costing */}
+          <div className='bg-slate-50/80 p-4 sm:p-5 rounded-xl border border-slate-200/80 space-y-3'>
+            <h3 className='font-semibold text-slate-800 text-sm flex items-center justify-between'>
+              <span>Direct Event Costs (Internal)</span>
+              <span className='text-xs font-normal text-slate-500'>Confidential</span>
             </h3>
-            <div className='grid grid-cols-3 gap-3'>
+
+            <div className='grid grid-cols-1 sm:grid-cols-3 gap-3'>
               <div>
-                <label className='block text-xs text-slate-500 mb-1'>
+                <label className='block text-[11px] sm:text-xs text-slate-600 mb-1'>
                   Catering Cost
                 </label>
                 <input
@@ -431,11 +518,11 @@ export default function InvoiceGenerator() {
                       cateringExpense: e.target.value,
                     })
                   }
-                  className='w-full px-3 py-1.5 border rounded text-sm bg-white'
+                  className='w-full px-3 py-1.5 border border-slate-300 rounded-lg text-sm bg-white'
                 />
               </div>
               <div>
-                <label className='block text-xs text-slate-500 mb-1'>
+                <label className='block text-[11px] sm:text-xs text-slate-600 mb-1'>
                   Hall Maintenance
                 </label>
                 <input
@@ -448,11 +535,11 @@ export default function InvoiceGenerator() {
                       hallMaintenance: e.target.value,
                     })
                   }
-                  className='w-full px-3 py-1.5 border rounded text-sm bg-white'
+                  className='w-full px-3 py-1.5 border border-slate-300 rounded-lg text-sm bg-white'
                 />
               </div>
               <div>
-                <label className='block text-xs text-slate-500 mb-1'>
+                <label className='block text-[11px] sm:text-xs text-slate-600 mb-1'>
                   Worker Salary
                 </label>
                 <input
@@ -465,14 +552,15 @@ export default function InvoiceGenerator() {
                       workerSalary: e.target.value,
                     })
                   }
-                  className='w-full px-3 py-1.5 border rounded text-sm bg-white'
+                  className='w-full px-3 py-1.5 border border-slate-300 rounded-lg text-sm bg-white'
                 />
               </div>
             </div>
-            <div className='pt-2 flex justify-between items-center text-xs text-slate-600 font-medium'>
-              <span>Estimated Net Margin:</span>
+
+            <div className='pt-2.5 border-t border-slate-200/80 flex justify-between items-center text-xs'>
+              <span className='font-medium text-slate-600'>Estimated Net Profit:</span>
               <span
-                className={`text-sm font-bold ${
+                className={`text-base font-bold ${
                   netProfit >= 0 ? 'text-emerald-600' : 'text-rose-600'
                 }`}
               >
@@ -481,50 +569,55 @@ export default function InvoiceGenerator() {
             </div>
           </div>
 
-          <div className='bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-3'>
-            <div className='flex justify-between items-center text-sm font-medium'>
-              <span className='text-slate-600'>Subtotal (Total Bill):</span>
-              <span className='text-lg font-bold text-slate-900'>
-                ₹ {subTotal.toLocaleString('en-IN')}
-              </span>
+          {/* Customer Bill Overview */}
+          <div className='bg-white p-4 sm:p-5 rounded-xl border border-slate-200/80 shadow-xs space-y-3.5 flex flex-col justify-between'>
+            <div className='space-y-3'>
+              <div className='flex justify-between items-center text-sm'>
+                <span className='text-slate-600 font-medium'>Subtotal (Total Billed):</span>
+                <span className='text-lg font-bold text-slate-900'>
+                  ₹ {subTotal.toLocaleString('en-IN')}
+                </span>
+              </div>
+              <div className='flex justify-between items-center text-sm gap-2'>
+                <span className='text-slate-600 font-medium'>Advance Paid (₹):</span>
+                <input
+                  type='number'
+                  min='0'
+                  value={advancePaid}
+                  onChange={(e) => setAdvancePaid(e.target.value)}
+                  className='w-36 px-3 py-1.5 border border-slate-300 rounded-lg text-right text-sm font-bold text-emerald-700 bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500'
+                />
+              </div>
             </div>
-            <div className='flex justify-between items-center text-sm'>
-              <span className='text-slate-600'>Advance Paid:</span>
-              <input
-                type='number'
-                min='0'
-                value={advancePaid}
-                onChange={(e) => setAdvancePaid(e.target.value)}
-                className='w-32 px-2 py-1 border border-slate-300 rounded text-right text-sm font-semibold text-emerald-700'
-              />
-            </div>
-            <div className='pt-2 border-t flex justify-between items-center'>
-              <span className='font-semibold text-slate-800'>
-                Balance Remaining:
+
+            <div className='pt-3 border-t border-slate-100 flex justify-between items-center'>
+              <span className='font-semibold text-slate-800 text-sm'>
+                Balance Due:
               </span>
-              <span className='text-xl font-bold text-rose-600'>
+              <span className='text-xl font-black text-rose-600'>
                 ₹ {balanceDue.toLocaleString('en-IN')}
               </span>
             </div>
           </div>
         </div>
 
+        {/* Submit Button */}
         <button
           type='submit'
           disabled={isSubmitting}
-          className='w-full py-3 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl transition flex items-center justify-center gap-2'
+          className='w-full py-3.5 bg-amber-600 hover:bg-amber-700 active:scale-[0.99] text-white font-bold rounded-xl transition flex items-center justify-center gap-2 shadow-sm text-sm sm:text-base'
         >
           <Save size={18} />
           {isSubmitting
-            ? 'Saving Invoice...'
+            ? 'Saving...'
             : editId
               ? 'Update Invoice'
-              : 'Generate & Save Invoice'}
+              : 'Save & Generate Invoice'}
         </button>
       </form>
 
       {savedInvoice && (
-        <div className='mt-8'>
+        <div className='mt-8 pt-6 border-t border-slate-200'>
           <InvoicePrintView invoice={savedInvoice} />
         </div>
       )}

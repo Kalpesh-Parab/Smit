@@ -106,7 +106,10 @@ export default function InvoicePrintView({ invoice }) {
               Special Events, Receptions & Banquets
             </p>
             <p style={{ color: '#64748b' }} className='text-xs'>
-              Contact: +91 98765 43210
+              Contact: +91 8411996658
+            </p>
+            <p style={{ color: '#64748b' }} className='text-xs'>
+              Email: siddhidambe1116@gmail.com
             </p>
           </div>
           <div className='text-right'>
