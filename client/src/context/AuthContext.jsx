@@ -4,7 +4,7 @@ import axios from 'axios';
 const AuthContext = createContext();
 
 const API_BASE =
-  import.meta.env.VITE_API_BASE_URL || 'https://smit-x7hq.onrender.com/api';
+  import.meta.env.VITE_API_BASE_URL || 'https://smit-608m.onrender.com/api';
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);

@@ -18,7 +18,7 @@ export default function WhatsAppModal({ isOpen, onClose }) {
   const fetchStatus = async (isManual = false) => {
     try {
       const res = await axios.get(
-        'https://smit-x7hq.onrender.com/api/whatsapp/status',
+        'https://smit-608m.onrender.com/api/whatsapp/status',
         {
           withCredentials: true,
         },
@@ -56,7 +56,7 @@ export default function WhatsAppModal({ isOpen, onClose }) {
     try {
       setDisconnecting(true);
       await axios.post(
-        'https://smit-x7hq.onrender.com/api/whatsapp/logout',
+        'https://smit-608m.onrender.com/api/whatsapp/logout',
         {},
         { withCredentials: true },
       );

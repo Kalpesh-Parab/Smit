@@ -27,7 +27,7 @@ export default function Navbar() {
   const pollStatus = async () => {
     try {
       const res = await axios.get(
-        'https://smit-x7hq.onrender.com/api/whatsapp/status',
+        'https://smit-608m.onrender.com/api/whatsapp/status',
         {
           withCredentials: true,
         },
